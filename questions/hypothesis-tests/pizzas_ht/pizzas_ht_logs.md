@@ -208,3 +208,23 @@ STACK API check: could not be completed
 Not well-formed XML: not well-formed (invalid token): line 155, column 31
 ```
 
+## Entry 14 — reviewer · round 1 (2026-07-23T17:12:13)
+
+**Key facts to carry forward:**
+- The question is now finalized pending API re-verification; the only outstanding change across the last two rounds was removing the redundant `FORBIDFLOAT: 0` from ans1 — all PRT/QTEST logic and content were already re-verified correct in prior rounds.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: MINOR ISSUES
+SELF_FIXED:
+- Removed the redundant `FORBIDFLOAT: 0` line from the ans1 input (per Planner's explicit instruction) — it just spells out the default value, is purely cosmetic, and contained to one input's option list with no effect elsewhere.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- SE relative tolerance (1%) and t-score decimal-place check remain generous by design; could be tightened if a stricter check is pedagogically preferred, but current margins comfortably separate correct answers from the s/n and sign-flip mistakes across the full random range.
+
+[Self-fix could not be verified against the STACK API.]
+```
+
