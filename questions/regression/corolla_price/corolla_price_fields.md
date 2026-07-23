@@ -27,7 +27,7 @@ n: 38;
 df: 36;
 b1: float(-(rand(10)+5)/10);
 tcase: rand(3);
-t_target: if tcase=0 then 10+rand(5) elseif tcase=1 then 4+rand(4) else 2+rand(2);
+t_target: if tcase=0 then 10+rand(5) elseif tcase=1 then 4+rand(4) else float((15+rand(5))/10);
 se_b1: float(abs(b1)/t_target);
 b0: float(rand(11)+12);
 t_true: float(b1/se_b1);

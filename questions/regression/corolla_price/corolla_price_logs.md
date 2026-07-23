@@ -156,3 +156,17 @@ FEEDBACK_TO_AUTHOR: Widen the "borderline" t-bin in the question variables so ge
 AGENT_SETTINGS_CHANGE: author=off
 ```
 
+## Entry 9 — reviewer-self-fix · attempt 1/3 (2026-07-23T18:27:29)
+
+**Reference files fetched:**
+- (none)
+
+**Already available (fetched earlier this session, not re-fetched):**
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+```
+
