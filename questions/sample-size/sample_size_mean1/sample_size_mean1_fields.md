@@ -14,7 +14,7 @@ QUESTIONTEXT:
 [[input:ans4]] [[validation:ans4]] [[feedback:prt_ans4]]
 
 QUESTIONVARIABLES:
-s: (5+rand(16))/10;
+s: (5+rand(16))/10.0;
 E1: rand([0.2,0.3,0.4,0.5]);
 r2: rand([2,3,4]);
 r3set: setdifference({2,3,4},{r2});
