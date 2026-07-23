@@ -54,3 +54,17 @@ FEEDBACK: Worked solution walks the same chain as the book (SE → t → bucket 
 PRT/QTEST SUGGESTIONS: Test all four t-buckets, including values just inside/outside each edge (t≈0.99/1.01, 1.99/2.01, 2.99/3.01) to confirm consistent boundary handling. Test follow-through explicitly: part 3 with a deliberately wrong SE from part 1, confirming credit when t is computed correctly from that wrong SE; part 4 with a correct t but wrong bucket choice, confirming it's marked wrong; part 5 with a wrong bucket from part 4, confirming the decision graded is the one consistent with that wrong bucket, not the "true" one. Test part 6 independently with n both above and below 25 regardless of what's happening in parts 1-5. Confirm rounding x̄ for display never silently moves the realized t across a bucket boundary from the one intended by the randomization weights.
 ```
 
+## Entry 3 — author · attempt 1/3 (2026-07-23T17:03:26)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+
+Deviations reported: - Plan (negotiable, "ANSWER TESTS" section): used NumSigFigs for the standard error and NumDecPlaces for the t-score rather than the generically-suggested "relative/decimal tolerance", to give a concrete, checkable precision requirement in the question text per the rounding/precision authoring rule; also used EqualComAss (Maxima equality up to comparison of the selected integer code) rather than a bespoke test for the three MCQ inputs, since MCQ answers are plain integers/atoms and AlgEquiv-family tests are the natural fit — Reviewer can substitute a different test if a more specific one is preferred.
+- Plan (negotiable, "RANDOMIZATION" section): chose concrete numeric ranges/margins for t_abs per bucket (e.g. 3.2–4.1, 2.2–2.9, 1.2–1.9, 0.3–0.9) instead of leaving them unspecified, to satisfy the "safety margin away from boundaries" requirement concretely.
+```
+
