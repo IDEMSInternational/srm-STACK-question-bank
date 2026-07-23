@@ -74,30 +74,90 @@ SHOWVALIDATION: 0
 
 PRT prt_ans1:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+TANS: n1
 
 PRT prt_ans2:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+TANS: ans1*r2^2
+FALSENEXT: 1
+NODE 1:
+TEST: AlgEquiv
+TANS: ans1*r2
+TRUESCORE: 0
+TRUEFEEDBACK: <p>It looks like you scaled the sample size by \(r_2\) instead of \(r_2^2\) — since \(n\) depends on \(E^2\), scaling the margin of error by a factor scales \(n\) by the square of that factor. (This is checked against your own Part 1 answer.)</p>
+FALSEFEEDBACK: <p>This does not follow from your Part 1 answer using the correct scaling relationship \(n = n_1 \times r_2^2\). Check the scaling and re-apply it to your own value of \(n_1\).</p>
 
 PRT prt_ans3:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+TANS: ans1*r3^2
+FALSENEXT: 1
+NODE 1:
+TEST: AlgEquiv
+TANS: ans1*r3
+TRUESCORE: 0
+TRUEFEEDBACK: <p>It looks like you scaled the sample size by \(r_3\) instead of \(r_3^2\) — since \(n\) depends on \(E^2\), scaling the margin of error by a factor scales \(n\) by the square of that factor. (This is checked against your own Part 1 answer.)</p>
+FALSEFEEDBACK: <p>This does not follow from your Part 1 answer using the correct scaling relationship \(n = n_1 \times r_3^2\). Check the scaling and re-apply it to your own value of \(n_1\).</p>
 
 PRT prt_ans4:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+SANS: ans4
+TANS: mcq_correct_ans
 
 QTEST 1:
+DESCRIPTION: All parts correct
 INPUT ans1: n1
-INPUT ans2: n2
-INPUT ans3: n3
-INPUT ans4: mcq_ans
+INPUT ans2: n1*r2^2
+INPUT ans3: n1*r3^2
+INPUT ans4: mcq_correct_ans
 EXPECT prt_ans1: NODE0-T
 EXPECT prt_ans2: NODE0-T
 EXPECT prt_ans3: NODE0-T
 EXPECT prt_ans4: NODE0-T
+
+QTEST 2:
+DESCRIPTION: Wrong part 1, but parts 2 and 3 correctly follow through from the student's own (wrong) part-1 value
+INPUT ans1: n1+2
+INPUT ans2: (n1+2)*r2^2
+INPUT ans3: (n1+2)*r3^2
+INPUT ans4: mcq_correct_ans
+EXPECT prt_ans1: NODE0-F
+EXPECT prt_ans2: NODE0-T
+EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans4: NODE0-T
+
+QTEST 3:
+DESCRIPTION: Correct part 1, but part 2 uses the linear-scaling mistake (r2 instead of r2^2)
+INPUT ans1: n1
+INPUT ans2: n1*r2
+INPUT ans3: n1*r3^2
+INPUT ans4: mcq_correct_ans
+EXPECT prt_ans1: NODE0-T
+EXPECT prt_ans2: NODE1-T SCORE=0 PENALTY=0.1
+EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans4: NODE0-T
+
+QTEST 4:
+DESCRIPTION: Correct part 1, but part 2 is an unrelated wrong answer (not the follow-through, not the linear-scaling mistake)
+INPUT ans1: n1
+INPUT ans2: n1*r2^2+7
+INPUT ans3: n1*r3^2
+INPUT ans4: mcq_correct_ans
+EXPECT prt_ans1: NODE0-T
+EXPECT prt_ans2: NODE1-F
+EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans4: NODE0-T
+
+QTEST 5:
+DESCRIPTION: Wrong MCQ answer for part 4 (opposite option to the correct one)
+INPUT ans1: n1
+INPUT ans2: n1*r2^2
+INPUT ans3: n1*r3^2
+INPUT ans4: if mcq_correct_ans=option_larger then option_smaller else option_larger
+EXPECT prt_ans1: NODE0-T
+EXPECT prt_ans2: NODE0-T
+EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans4: NODE0-F

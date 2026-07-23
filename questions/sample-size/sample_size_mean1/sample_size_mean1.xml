@@ -83,8 +83,8 @@ which rounds up (since sample size must be a whole number) to \(n_1 = {@n1@}\).<
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans1</sans>
+    <tans>n1</tans>
     <trueanswernote>prt_ans1-1-T</trueanswernote>
     <falseanswernote>prt_ans1-1-F</falseanswernote>
   </node>
@@ -95,10 +95,26 @@ which rounds up (since sample size must be a whole number) to \(n_1 = {@n1@}\).<
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans2</sans>
+    <tans>ans1*r2^2</tans>
     <trueanswernote>prt_ans2-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans2-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>ans2</sans>
+    <tans>ans1*r2</tans>
+    <truescore>0</truescore>
+    <trueanswernote>prt_ans2-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>It looks like you scaled the sample size by \(r_2\) instead of \(r_2^2\) — since \(n\) depends on \(E^2\), scaling the margin of error by a factor scales \(n\) by the square of that factor. (This is checked against your own Part 1 answer.)</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans2-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>This does not follow from your Part 1 answer using the correct scaling relationship \(n = n_1 \times r_2^2\). Check the scaling and re-apply it to your own value of \(n_1\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -107,10 +123,26 @@ which rounds up (since sample size must be a whole number) to \(n_1 = {@n1@}\).<
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans3</sans>
+    <tans>ans1*r3^2</tans>
     <trueanswernote>prt_ans3-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans3-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>ans3</sans>
+    <tans>ans1*r3</tans>
+    <truescore>0</truescore>
+    <trueanswernote>prt_ans3-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>It looks like you scaled the sample size by \(r_3\) instead of \(r_3^2\) — since \(n\) depends on \(E^2\), scaling the margin of error by a factor scales \(n\) by the square of that factor. (This is checked against your own Part 1 answer.)</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans3-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>This does not follow from your Part 1 answer using the correct scaling relationship \(n = n_1 \times r_3^2\). Check the scaling and re-apply it to your own value of \(n_1\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -119,29 +151,30 @@ which rounds up (since sample size must be a whole number) to \(n_1 = {@n1@}\).<
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans4</sans>
+    <tans>mcq_correct_ans</tans>
     <trueanswernote>prt_ans4-1-T</trueanswernote>
     <falseanswernote>prt_ans4-1-F</falseanswernote>
   </node>
 </prt>
 <qtest>
   <testcase>1</testcase>
+  <description>All parts correct</description>
   <testinput>
     <name>ans1</name>
     <value>n1</value>
   </testinput>
   <testinput>
     <name>ans2</name>
-    <value>n2</value>
+    <value>n1*r2^2</value>
   </testinput>
   <testinput>
     <name>ans3</name>
-    <value>n3</value>
+    <value>n1*r3^2</value>
   </testinput>
   <testinput>
     <name>ans4</name>
-    <value>mcq_ans</value>
+    <value>mcq_correct_ans</value>
   </testinput>
   <expected>
     <name>prt_ans1</name>
@@ -166,6 +199,186 @@ which rounds up (since sample size must be a whole number) to \(n_1 = {@n1@}\).<
     <expectedscore>1.0000000</expectedscore>
     <expectedpenalty>0.0000000</expectedpenalty>
     <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>2</testcase>
+  <description>Wrong part 1, but parts 2 and 3 correctly follow through from the student's own (wrong) part-1 value</description>
+  <testinput>
+    <name>ans1</name>
+    <value>n1+2</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>(n1+2)*r2^2</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>(n1+2)*r3^2</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>mcq_correct_ans</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>3</testcase>
+  <description>Correct part 1, but part 2 uses the linear-scaling mistake (r2 instead of r2^2)</description>
+  <testinput>
+    <name>ans1</name>
+    <value>n1</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>n1*r2</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>n1*r3^2</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>mcq_correct_ans</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-2-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>4</testcase>
+  <description>Correct part 1, but part 2 is an unrelated wrong answer (not the follow-through, not the linear-scaling mistake)</description>
+  <testinput>
+    <name>ans1</name>
+    <value>n1</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>n1*r2^2+7</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>n1*r3^2</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>mcq_correct_ans</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-2-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>5</testcase>
+  <description>Wrong MCQ answer for part 4 (opposite option to the correct one)</description>
+  <testinput>
+    <name>ans1</name>
+    <value>n1</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>n1*r2^2</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>n1*r3^2</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>if mcq_correct_ans=option_larger then option_smaller else option_larger</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-F</expectedanswernote>
   </expected>
 </qtest>
 </question>

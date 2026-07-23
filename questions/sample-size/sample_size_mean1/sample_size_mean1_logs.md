@@ -78,3 +78,14 @@ Deviations reported: - STRUCTURE (non-negotiable), part 2/3 follow-through: I se
 - Also flagging per the plan's own note: Reviewer should build the "wrong scaling relationship" vs "correct scaling, propagated part-1 error" diagnostic distinction for parts 2/3, and test both randomized directions for part 4, per the PRT/QTEST SUGGESTIONS section.
 ```
 
+## Entry 4 — reviewer-self-fix · attempt 1/3 (2026-07-23T18:26:47)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+```
+
