@@ -64,3 +64,17 @@ PRT/QTEST SUGGESTIONS:
 - Test part 4 for both randomized directions (90%-vs-95% and 99%-vs-95%) to make sure the correct MCQ option flips correctly with the direction variable, not hardcoded to "larger."
 ```
 
+## Entry 3 — author · attempt 1/3 (2026-07-23T18:25:33)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+
+Deviations reported: - STRUCTURE (non-negotiable), part 2/3 follow-through: I set each part's TANS to the fixed teacher value (n1*r2^2, n1*r3^2) rather than an expression depending on the student's own ans1, since my scope is limited to declaring TYPE/TANS/ANSWERTEST per input, not PRT logic — the actual follow-through comparison (using the student's submitted ans1 rather than the true n1) must be implemented by Reviewer in the PRT's feedback variables/answer tests, as the plan itself anticipates ("graded via follow-through"). Flagging this explicitly so Reviewer builds ans2/ans3's PRTs to use the student's own ans1 value, not the fixed n1.
+- Also flagging per the plan's own note: Reviewer should build the "wrong scaling relationship" vs "correct scaling, propagated part-1 error" diagnostic distinction for parts 2/3, and test both randomized directions for part 4, per the PRT/QTEST SUGGESTIONS section.
+```
+
