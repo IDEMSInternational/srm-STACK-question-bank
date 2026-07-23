@@ -125,3 +125,17 @@ NOTED_FOR_PLANNER:
 [Self-fix could not be verified against the STACK API.]
 ```
 
+## Entry 8 — planner · review (2026-07-23T17:09:00)
+
+**Reference files fetched:**
+- (none)
+
+```text
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: Build failed with "Not well-formed XML: not well-formed (invalid token): line 155, column 31" — a raw `<=`/`<` character appearing as literal XML element content (most likely inside a `<sans>` or feedbackvariables text block, e.g. `is(abs(ans1-se_true)<=0.01*se_true)` in prt_ans1's node 0) breaks the parser since `<` isn't valid unescaped content. Fix by wrapping the affected `<sans>`, `<tans>`, and `<feedbackvariables><text>` fields containing comparison operators in `<![CDATA[ ... ]]>`, or entity-escape `<`/`<=` as `&lt;`/`&lt;=`. This is a pure XML-serialization fix — no change to question content, PRT logic, randomization, or feedback wording is needed.
+AGENT_SETTINGS_CHANGE: author=off
+```
+
