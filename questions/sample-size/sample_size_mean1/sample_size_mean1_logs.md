@@ -89,3 +89,23 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 5 — reviewer · round 1 (2026-07-23T18:26:50)
+
+**Key facts to carry forward:**
+- Part 2/3 PRTs grade follow-through against the student's own submitted `ans1` (e.g. `ans1*r2^2`), not the fixed teacher `n1`, per the plan's non-negotiable structure — Author's draft had wrongly used fixed `n2`/`n3` teacher values, corrected here.
+- The linear-scaling mistake distractor (`ans1*r2` instead of `ans1*r2^2`) is safe from degeneracy for all r2/r3 in {2,3,4} since `r^2 ≠ r` for every value in that range, so it never coincides with the correct follow-through answer.
+- Part 4's two randomized directions (90-vs-95, 99-vs-95) can't both be exercised by qtest cases within one variant, since `dir` is fixed once per variant — only one direction is ever testable per deployed seed.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: NEEDS REVISION
+SELF_FIXED:
+- Built the real PRT logic and qtest cases for all four inputs (Author only left placeholder trivial PRTs, as expected — this is squarely my job per scope). This included implementing the plan's mandatory Part 2/3 follow-through logic (grading against the student's own submitted `ans1`, not the fixed teacher `n1`), and a diagnostic node distinguishing a "wrong scaling power" mistake (student multiplied by `r2`/`r3` instead of `r2^2`/`r3^2`) from other wrong answers.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- Only one of the two Part-4 randomized directions (90-vs-95 or 99-vs-95) can ever be exercised by a qtest for a given variant, since `dir` is a question variable fixed once per variant — genuinely testing both directions would require two separately-seeded variants/deployments, which is outside qtest's scope. Noted as a limitation of the "test both directions" suggestion, not a bug.
+```
+
