@@ -55,10 +55,10 @@ validity_true: if n>25 then 1 else 2;
 h0_ta: mu=12;
 h1_ta: mu#12;
 
-ta4: [[1, is(bucket_true=1), "\\( P < 0.003 \\)"],
-      [2, is(bucket_true=2), "\\( 0.003 < P < 0.05 \\)"],
-      [3, is(bucket_true=3), "\\( 0.05 < P < 0.32 \\)"],
-      [4, is(bucket_true=4), "\\( P > 0.32 \\)"]];
+ta4: [[1, is(bucket_true=1), "\\( P \\lt 0.003 \\)"],
+      [2, is(bucket_true=2), "\\( 0.003 \\lt P \\lt 0.05 \\)"],
+      [3, is(bucket_true=3), "\\( 0.05 \\lt P \\lt 0.32 \\)"],
+      [4, is(bucket_true=4), "\\( P \\gt 0.32 \\)"]];
 ta4: random_permutation(ta4);
 
 ta5: [[1, is(decision_true=1), "Reject \\(H_0\\)"],
