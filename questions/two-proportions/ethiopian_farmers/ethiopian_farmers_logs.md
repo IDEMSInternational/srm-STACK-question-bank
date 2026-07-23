@@ -108,3 +108,22 @@ NOTED_FOR_PLANNER:
 - Per the plan's PRT/QTEST suggestions, a genuinely forced "CI-conclusion diverges from test-decision near a boundary" variant, and a genuinely forced small-N regime variant, cannot be deterministically produced through qtest input values alone — qtest fixes inputs, not the random draw of `regime`/cell counts within a single test run. My qtest cases are written generically (using the CAS formulas themselves, e.g. `min_expected_true`, `validity_opts`) so they pass correctly *whichever* regime the run happens to draw, which verifies the logic is right in general, but does not guarantee a specific regime was exercised on any given run. If Planner wants a specific regime or boundary case deterministically covered, a `<deployedseed>` pinned to a known-good variant would be needed — outside what a stateless qtest input list can express.
 ```
 
+## Entry 6 — planner · review (2026-07-23T18:33:43)
+
+**Reference files fetched:**
+- (none)
+
+```text
+This is a small, purely content-level fix (question text wording), not a PRT/qtest change — Author should handle it, no need to touch Reviewer's logic. Sending back for that one fix.
+
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: In the MCQ option text for `ta_mcq1a` and `ta_mcq2a`, replace the markdown-style asterisk emphasis with real HTML tags so it actually renders. Specifically:
+- In `ta_mcq1a`, option 1: `"\\( \\hat p_{\\text{small}} - \\hat p_{\\text{large}} \\), the difference in proportions of *non-adopters* between groups"` → change `*non-adopters*` to `<em>non-adopters</em>`.
+- In `ta_mcq1a`, option 3: `"\\( \\hat p_{\\text{small}} - \\hat p_{\\text{large}} \\), the difference in proportions of *adopters* between groups"` → change `*adopters*` to `<em>adopters</em>`.
+Check for any other asterisk-emphasis instances in these two option lists and convert them the same way. No other changes needed — everything else in this draft (follow-through logic, guarded fallbacks, feedback content, qtest coverage) is approved as-is.
+AGENT_SETTINGS_CHANGE: (not applicable)
+```
+
