@@ -142,51 +142,154 @@ SHOWVALIDATION: 0
 
 PRT prt_ans1:
 NODE 0:
-SANS: true
+SANS: is(abs(ans1-se_true)<=0.01*se_true)
 TANS: true
+FALSENEXT: 1
+NODE 1:
+SANS: is(abs(ans1-(s/n))<=0.01*(s/n))
+TANS: true
+TRUESCORE: 0
+TRUEFEEDBACK: <p>It looks like you divided \(s\) by \(n\) instead of \(\sqrt{n}\). Recall \(SE=s/\sqrt{n}\).</p>
+FALSEFEEDBACK: <p>Not correct — check the formula \(SE=s/\sqrt{n}\).</p>
 
 PRT prt_ans2a:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+SANS: ans2a
+TANS: h0_ta
 
 PRT prt_ans2b:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+SANS: ans2b
+TANS: h1_ta
 
 PRT prt_ans3:
 NODE 0:
-SANS: true
+SANS: is(ans1=0)
 TANS: true
+TRUESCORE: 0
+TRUEFEEDBACK: <p>Your standard error is zero, so a \(t\)-score cannot be computed from it.</p>
+FALSENEXT: 1
+FALSEFEEDBACK: <p></p>
+NODE 1:
+SANS: is(abs(ans3-(xbar-12)/ans1)<=0.02)
+TANS: true
+FALSENEXT: 2
+TRUEFEEDBACK: <p>Correct — well done.</p>
+NODE 2:
+SANS: is(abs(ans3-(12-xbar)/ans1)<=0.02)
+TANS: true
+TRUESCORE: 0
+TRUEFEEDBACK: <p>It looks like you flipped the sign — use \(t=(\bar{x}-\mu_0)/SE\), not \((\mu_0-\bar{x})/SE\).</p>
+FALSEFEEDBACK: <p>Not correct — recompute \(t=(\bar{x}-\mu_0)/SE\) using your own answer to Part 1 as \(SE\).</p>
 
 PRT prt_ans4:
 NODE 0:
-SANS: true
+SANS: is(ans4=(if abs(ans3)>3 then 1 elseif abs(ans3)>2 then 2 elseif abs(ans3)>1 then 3 else 4))
 TANS: true
+TRUEFEEDBACK: <p>Correct bucket, consistent with your own \(t\)-score.</p>
+FALSEFEEDBACK: <p>Not correct — re-apply the 68-95-99.7 rule to your own \(t\)-score from Part 3.</p>
 
 PRT prt_ans5:
 NODE 0:
-SANS: true
+SANS: is(ans5=(if ans4=1 or ans4=2 then 1 else 2))
 TANS: true
+TRUEFEEDBACK: <p>Correct conclusion, consistent with your own P-value bucket.</p>
+FALSEFEEDBACK: <p>Not correct — your conclusion should match the P-value bucket you chose in Part 4: reject if \(P<0.05\), otherwise fail to reject.</p>
 
 PRT prt_ans6:
 NODE 0:
-SANS: true
+SANS: is(ans6=validity_true)
 TANS: true
+TRUEFEEDBACK: <p>Correct.</p>
+FALSEFEEDBACK: <p>Not correct — compare \(n\) to the textbook's rule of thumb of \(n\) much larger than 25.</p>
 
 QTEST 1:
+DESCRIPTION: All correct (teacher's answer)
 INPUT ans1: se_true
 INPUT ans2a: h0_ta
 INPUT ans2b: h1_ta
 INPUT ans3: t_true
-INPUT ans4: ta4
-INPUT ans5: ta5
-INPUT ans6: ta6
+INPUT ans4: bucket_true
+INPUT ans5: decision_true
+INPUT ans6: validity_true
 EXPECT prt_ans1: NODE0-T
 EXPECT prt_ans2a: NODE0-T
 EXPECT prt_ans2b: NODE0-T
-EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans3: NODE1-T
 EXPECT prt_ans4: NODE0-T
 EXPECT prt_ans5: NODE0-T
 EXPECT prt_ans6: NODE0-T
+
+QTEST 2:
+DESCRIPTION: SE computed as s/n (common mistake), but t-score correctly follows through from that wrong SE
+INPUT ans1: s/n
+INPUT ans2a: h0_ta
+INPUT ans2b: h1_ta
+INPUT ans3: (xbar-12)/(s/n)
+INPUT ans4: bucket_true
+INPUT ans5: decision_true
+INPUT ans6: validity_true
+EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+EXPECT prt_ans3: NODE1-T
+
+QTEST 3:
+DESCRIPTION: Correct t-score but wrong bucket chosen in Part 4
+INPUT ans1: se_true
+INPUT ans3: t_true
+INPUT ans4: mod(bucket_true,4)+1
+EXPECT prt_ans3: NODE1-T
+EXPECT prt_ans4: NODE0-F
+
+QTEST 4:
+DESCRIPTION: Wrong bucket in Part 4, but Part 5 decision follows through from that wrong bucket (not the true one)
+INPUT ans1: se_true
+INPUT ans3: t_true
+INPUT ans4: mod(bucket_true,4)+1
+INPUT ans5: if (mod(bucket_true,4)+1)=1 or (mod(bucket_true,4)+1)=2 then 1 else 2
+EXPECT prt_ans4: NODE0-F
+EXPECT prt_ans5: NODE0-T
+
+QTEST 5:
+DESCRIPTION: Validity check wrong, independent of other parts
+INPUT ans6: if validity_true=1 then 2 else 1
+EXPECT prt_ans6: NODE0-F
+
+QTEST 6:
+DESCRIPTION: t-score boundary just above 3 -> bucket 1
+INPUT ans3: 3.01
+INPUT ans4: 1
+EXPECT prt_ans4: NODE0-T
+
+QTEST 7:
+DESCRIPTION: t-score boundary just below 3 -> bucket 2
+INPUT ans3: 2.99
+INPUT ans4: 2
+EXPECT prt_ans4: NODE0-T
+
+QTEST 8:
+DESCRIPTION: t-score boundary just below 2 -> bucket 3
+INPUT ans3: 1.99
+INPUT ans4: 3
+EXPECT prt_ans4: NODE0-T
+
+QTEST 9:
+DESCRIPTION: t-score boundary just below 1 -> bucket 4
+INPUT ans3: 0.99
+INPUT ans4: 4
+EXPECT prt_ans4: NODE0-T
+
+QTEST 10:
+DESCRIPTION: Blank/zero SE guard on Part 3 — division-by-zero adversarial case
+INPUT ans1: 0
+INPUT ans3: 0
+EXPECT prt_ans1: NODE0-F
+EXPECT prt_ans3: NODE0-T SCORE=0 PENALTY=0.1
+
+QTEST 11:
+DESCRIPTION: Sign-flip mistake on t-score, using correct own SE
+INPUT ans1: se_true
+INPUT ans3: (12-xbar)/se_true
+EXPECT prt_ans1: NODE0-T
+EXPECT prt_ans3: NODE2-T SCORE=0 PENALTY=0.1

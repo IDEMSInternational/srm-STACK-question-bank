@@ -68,3 +68,14 @@ Deviations reported: - Plan (negotiable, "ANSWER TESTS" section): used NumSigFig
 - Plan (negotiable, "RANDOMIZATION" section): chose concrete numeric ranges/margins for t_abs per bucket (e.g. 3.2–4.1, 2.2–2.9, 1.2–1.9, 0.3–0.9) instead of leaving them unspecified, to satisfy the "safety margin away from boundaries" requirement concretely.
 ```
 
+## Entry 4 — reviewer-self-fix · attempt 1/3 (2026-07-23T17:05:43)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: could not be completed
+
+Not well-formed XML: not well-formed (invalid token): line 155, column 31
+```
+

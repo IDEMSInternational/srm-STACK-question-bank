@@ -152,10 +152,26 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>is(abs(ans1-se_true)<=0.01*se_true)</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans1-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>is(abs(ans1-(s/n))<=0.01*(s/n))</sans>
+    <tans>true</tans>
+    <truescore>0</truescore>
+    <trueanswernote>prt_ans1-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>It looks like you divided \(s\) by \(n\) instead of \(\sqrt{n}\). Recall \(SE=s/\sqrt{n}\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans1-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — check the formula \(SE=s/\sqrt{n}\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -164,8 +180,8 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans2a</sans>
+    <tans>h0_ta</tans>
     <trueanswernote>prt_ans2a-1-T</trueanswernote>
     <falseanswernote>prt_ans2a-1-F</falseanswernote>
   </node>
@@ -176,8 +192,8 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans2b</sans>
+    <tans>h1_ta</tans>
     <trueanswernote>prt_ans2b-1-T</trueanswernote>
     <falseanswernote>prt_ans2b-1-F</falseanswernote>
   </node>
@@ -188,10 +204,45 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>is(ans1=0)</sans>
     <tans>true</tans>
+    <truescore>0</truescore>
     <trueanswernote>prt_ans3-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Your standard error is zero, so a \(t\)-score cannot be computed from it.</p>]]></text>
+    </truefeedback>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans3-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p></p>]]></text>
+    </falsefeedback>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>is(abs(ans3-(xbar-12)/ans1)<=0.02)</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans3-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct — well done.</p>]]></text>
+    </truefeedback>
+    <falsenextnode>2</falsenextnode>
+    <falseanswernote>prt_ans3-2-F</falseanswernote>
+  </node>
+  <node>
+    <name>2</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>is(abs(ans3-(12-xbar)/ans1)<=0.02)</sans>
+    <tans>true</tans>
+    <truescore>0</truescore>
+    <trueanswernote>prt_ans3-3-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>It looks like you flipped the sign — use \(t=(\bar{x}-\mu_0)/SE\), not \((\mu_0-\bar{x})/SE\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans3-3-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — recompute \(t=(\bar{x}-\mu_0)/SE\) using your own answer to Part 1 as \(SE\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -200,10 +251,16 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>is(ans4=(if abs(ans3)>3 then 1 elseif abs(ans3)>2 then 2 elseif abs(ans3)>1 then 3 else 4))</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans4-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct bucket, consistent with your own \(t\)-score.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans4-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — re-apply the 68-95-99.7 rule to your own \(t\)-score from Part 3.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -212,10 +269,16 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>is(ans5=(if ans4=1 or ans4=2 then 1 else 2))</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans5-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct conclusion, consistent with your own P-value bucket.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans5-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — your conclusion should match the P-value bucket you chose in Part 4: reject if \(P<0.05\), otherwise fail to reject.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -224,14 +287,21 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>is(ans6=validity_true)</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans6-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans6-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — compare \(n\) to the textbook's rule of thumb of \(n\) much larger than 25.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 <qtest>
   <testcase>1</testcase>
+  <description>All correct (teacher's answer)</description>
   <testinput>
     <name>ans1</name>
     <value>se_true</value>
@@ -250,15 +320,15 @@ ta6: [[1, is(validity_true=1), "Yes"],
   </testinput>
   <testinput>
     <name>ans4</name>
-    <value>ta4</value>
+    <value>bucket_true</value>
   </testinput>
   <testinput>
     <name>ans5</name>
-    <value>ta5</value>
+    <value>decision_true</value>
   </testinput>
   <testinput>
     <name>ans6</name>
-    <value>ta6</value>
+    <value>validity_true</value>
   </testinput>
   <expected>
     <name>prt_ans1</name>
@@ -282,7 +352,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
     <name>prt_ans3</name>
     <expectedscore>1.0000000</expectedscore>
     <expectedpenalty>0.0000000</expectedpenalty>
-    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+    <expectedanswernote>prt_ans3-2-T</expectedanswernote>
   </expected>
   <expected>
     <name>prt_ans4</name>
@@ -301,6 +371,254 @@ ta6: [[1, is(validity_true=1), "Yes"],
     <expectedscore>1.0000000</expectedscore>
     <expectedpenalty>0.0000000</expectedpenalty>
     <expectedanswernote>prt_ans6-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>2</testcase>
+  <description>SE computed as s/n (common mistake), but t-score correctly follows through from that wrong SE</description>
+  <testinput>
+    <name>ans1</name>
+    <value>s/n</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>h0_ta</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>h1_ta</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>(xbar-12)/(s/n)</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>bucket_true</value>
+  </testinput>
+  <testinput>
+    <name>ans5</name>
+    <value>decision_true</value>
+  </testinput>
+  <testinput>
+    <name>ans6</name>
+    <value>validity_true</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-2-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-2-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>3</testcase>
+  <description>Correct t-score but wrong bucket chosen in Part 4</description>
+  <testinput>
+    <name>ans1</name>
+    <value>se_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>t_true</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>mod(bucket_true,4)+1</value>
+  </testinput>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-2-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-F</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>4</testcase>
+  <description>Wrong bucket in Part 4, but Part 5 decision follows through from that wrong bucket (not the true one)</description>
+  <testinput>
+    <name>ans1</name>
+    <value>se_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>t_true</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>mod(bucket_true,4)+1</value>
+  </testinput>
+  <testinput>
+    <name>ans5</name>
+    <value>if (mod(bucket_true,4)+1)=1 or (mod(bucket_true,4)+1)=2 then 1 else 2</value>
+  </testinput>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans5</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans5-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>5</testcase>
+  <description>Validity check wrong, independent of other parts</description>
+  <testinput>
+    <name>ans6</name>
+    <value>if validity_true=1 then 2 else 1</value>
+  </testinput>
+  <expected>
+    <name>prt_ans6</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans6-1-F</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>6</testcase>
+  <description>t-score boundary just above 3 -> bucket 1</description>
+  <testinput>
+    <name>ans3</name>
+    <value>3.01</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>1</value>
+  </testinput>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>7</testcase>
+  <description>t-score boundary just below 3 -> bucket 2</description>
+  <testinput>
+    <name>ans3</name>
+    <value>2.99</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>2</value>
+  </testinput>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>8</testcase>
+  <description>t-score boundary just below 2 -> bucket 3</description>
+  <testinput>
+    <name>ans3</name>
+    <value>1.99</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>3</value>
+  </testinput>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>9</testcase>
+  <description>t-score boundary just below 1 -> bucket 4</description>
+  <testinput>
+    <name>ans3</name>
+    <value>0.99</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>4</value>
+  </testinput>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>10</testcase>
+  <description>Blank/zero SE guard on Part 3 — division-by-zero adversarial case</description>
+  <testinput>
+    <name>ans1</name>
+    <value>0</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>0</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>11</testcase>
+  <description>Sign-flip mistake on t-score, using correct own SE</description>
+  <testinput>
+    <name>ans1</name>
+    <value>se_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>(12-xbar)/se_true</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-3-T</expectedanswernote>
   </expected>
 </qtest>
 </question>
