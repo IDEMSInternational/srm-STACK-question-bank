@@ -282,7 +282,7 @@ QTEST 10:
 DESCRIPTION: Blank/zero SE guard on Part 3 — division-by-zero adversarial case
 INPUT ans1: 0
 INPUT ans3: 0
-EXPECT prt_ans1: NODE0-F
+EXPECT prt_ans1: NODE1-F
 EXPECT prt_ans3: NODE0-T SCORE=0 PENALTY=0.1
 
 QTEST 11:

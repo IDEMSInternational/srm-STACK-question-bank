@@ -584,7 +584,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
     <name>prt_ans1</name>
     <expectedscore>0.0000000</expectedscore>
     <expectedpenalty>0.1000000</expectedpenalty>
-    <expectedanswernote>prt_ans1-1-F</expectedanswernote>
+    <expectedanswernote>prt_ans1-2-F</expectedanswernote>
   </expected>
   <expected>
     <name>prt_ans3</name>

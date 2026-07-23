@@ -248,3 +248,14 @@ These are not wrapped in `<![CDATA[ ... ]]>` and not entity-escaped, so the lite
 AGENT_SETTINGS_CHANGE: author=off
 ```
 
+## Entry 16 — reviewer-self-fix · attempt 1/3 (2026-07-23T17:14:00)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: could not be completed
+
+Not well-formed XML: not well-formed (invalid token): line 155, column 31
+```
+
