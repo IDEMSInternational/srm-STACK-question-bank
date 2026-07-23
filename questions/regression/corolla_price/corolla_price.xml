@@ -37,7 +37,7 @@ t_target: if tcase=0 then 10+rand(5) elseif tcase=1 then 4+rand(4) else 2+rand(2
 se_b1: float(abs(b1)/t_target);
 b0: float(rand(11)+12);
 t_true: float(b1/se_b1);
-r: float(-t_true/sqrt(df+t_true^2));
+r: float(t_true/sqrt(df+t_true^2));
 r2pct: float(100*r^2);
 p_true: float(cdf_student_t(t_true, df));
 ci_lower: float(b1 - 2*se_b1);
@@ -104,10 +104,13 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[is(abs(ans_t-t_true)<=0.05*abs(t_true)+0.005)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans_t-1-T</trueanswernote>
     <falseanswernote>prt_ans_t-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Recall \(t=b_1/SE(b_1)\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -116,10 +119,13 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[is(abs(ans_p-p_true)<=0.005)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans_p-1-T</trueanswernote>
     <falseanswernote>prt_ans_p-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Recompute the one-tailed p-value from the t-distribution with df=36, using the correct (lower) tail for \(H_1:\beta_1<0\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -128,10 +134,13 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans_decision</sans>
+    <tans><![CDATA[if is(ans_p<0.05) then reject else noreject]]></tans>
     <trueanswernote>prt_ans_decision-1-T</trueanswernote>
     <falseanswernote>prt_ans_decision-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Your decision should be consistent with your own p-value: reject \(H_0\) if \(p<0.05\), otherwise do not reject.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -140,10 +149,13 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[is(abs(ans_r2-r2pct)<=0.5)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans_r2-1-T</trueanswernote>
     <falseanswernote>prt_ans_r2-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Remember \(R^2=r^2\), reported as a percentage.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -152,7 +164,7 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[is(abs(ans_ci_lower-ci_lower)<=0.05*abs(ci_lower)+0.005)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans_ci_lower-1-T</trueanswernote>
     <falseanswernote>prt_ans_ci_lower-1-F</falseanswernote>
@@ -164,7 +176,7 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[is(abs(ans_ci_upper-ci_upper)<=0.05*abs(ci_upper)+0.005)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans_ci_upper-1-T</trueanswernote>
     <falseanswernote>prt_ans_ci_upper-1-F</falseanswernote>
@@ -172,6 +184,7 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
 </prt>
 <qtest>
   <testcase>1</testcase>
+  <description>All correct (happy path)</description>
   <testinput>
     <name>ans_t</name>
     <value>t_true</value>
@@ -182,7 +195,7 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
   </testinput>
   <testinput>
     <name>ans_decision</name>
-    <value>ta_decision</value>
+    <value>first(mcq_correct(ta_decision))</value>
   </testinput>
   <testinput>
     <name>ans_r2</name>
@@ -231,6 +244,331 @@ Be careful to apply this margin to \(b_1\) only, not to \(b_0\) or \(r\).</p>]]>
     <expectedscore>1.0000000</expectedscore>
     <expectedpenalty>0.0000000</expectedpenalty>
     <expectedanswernote>prt_ans_ci_upper-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>2</testcase>
+  <description>Wrong t-statistic, everything else correct</description>
+  <testinput>
+    <name>ans_t</name>
+    <value>t_true+1</value>
+  </testinput>
+  <testinput>
+    <name>ans_p</name>
+    <value>p_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_decision</name>
+    <value>first(mcq_correct(ta_decision))</value>
+  </testinput>
+  <testinput>
+    <name>ans_r2</name>
+    <value>r2pct</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_lower</name>
+    <value>ci_lower</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_upper</name>
+    <value>ci_upper</value>
+  </testinput>
+  <expected>
+    <name>prt_ans_t</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans_t-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_p</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_p-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_decision</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_decision-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_r2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_r2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_lower</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_lower-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_upper</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_upper-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>3</testcase>
+  <description>Wrong p-value but decision correctly follows through from the student's own (wrong) p</description>
+  <testinput>
+    <name>ans_t</name>
+    <value>t_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_p</name>
+    <value>100</value>
+  </testinput>
+  <testinput>
+    <name>ans_decision</name>
+    <value>noreject</value>
+  </testinput>
+  <testinput>
+    <name>ans_r2</name>
+    <value>r2pct</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_lower</name>
+    <value>ci_lower</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_upper</name>
+    <value>ci_upper</value>
+  </testinput>
+  <expected>
+    <name>prt_ans_t</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_t-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_p</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans_p-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_decision</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_decision-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_r2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_r2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_lower</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_lower-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_upper</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_upper-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>4</testcase>
+  <description>Correct p-value but decision inconsistent with it</description>
+  <testinput>
+    <name>ans_t</name>
+    <value>t_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_p</name>
+    <value>p_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_decision</name>
+    <value><![CDATA[if is(p_true<0.05) then noreject else reject]]></value>
+  </testinput>
+  <testinput>
+    <name>ans_r2</name>
+    <value>r2pct</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_lower</name>
+    <value>ci_lower</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_upper</name>
+    <value>ci_upper</value>
+  </testinput>
+  <expected>
+    <name>prt_ans_t</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_t-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_p</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_p-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_decision</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans_decision-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_r2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_r2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_lower</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_lower-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_upper</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_upper-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>5</testcase>
+  <description>Wrong R^2 (off by 1 percentage point)</description>
+  <testinput>
+    <name>ans_t</name>
+    <value>t_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_p</name>
+    <value>p_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_decision</name>
+    <value>first(mcq_correct(ta_decision))</value>
+  </testinput>
+  <testinput>
+    <name>ans_r2</name>
+    <value>r2pct+1</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_lower</name>
+    <value>ci_lower</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_upper</name>
+    <value>ci_upper</value>
+  </testinput>
+  <expected>
+    <name>prt_ans_t</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_t-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_p</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_p-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_decision</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_decision-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_r2</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans_r2-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_lower</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_lower-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_upper</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_upper-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>6</testcase>
+  <description>CI bounds swapped (both wrong)</description>
+  <testinput>
+    <name>ans_t</name>
+    <value>t_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_p</name>
+    <value>p_true</value>
+  </testinput>
+  <testinput>
+    <name>ans_decision</name>
+    <value>first(mcq_correct(ta_decision))</value>
+  </testinput>
+  <testinput>
+    <name>ans_r2</name>
+    <value>r2pct</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_lower</name>
+    <value>ci_upper</value>
+  </testinput>
+  <testinput>
+    <name>ans_ci_upper</name>
+    <value>ci_lower</value>
+  </testinput>
+  <expected>
+    <name>prt_ans_t</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_t-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_p</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_p-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_decision</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_decision-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_r2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans_r2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_lower</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_lower-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans_ci_upper</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans_ci_upper-1-F</expectedanswernote>
   </expected>
 </qtest>
 </question>

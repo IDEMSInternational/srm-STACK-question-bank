@@ -99,3 +99,17 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 6 — reviewer-self-fix · attempt 1/3 (2026-07-23T18:23:17)
+
+**Reference files fetched:**
+- (none)
+
+**Already available (fetched earlier this session, not re-fetched):**
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+```
+

@@ -31,7 +31,7 @@ t_target: if tcase=0 then 10+rand(5) elseif tcase=1 then 4+rand(4) else 2+rand(2
 se_b1: float(abs(b1)/t_target);
 b0: float(rand(11)+12);
 t_true: float(b1/se_b1);
-r: float(-t_true/sqrt(df+t_true^2));
+r: float(t_true/sqrt(df+t_true^2));
 r2pct: float(100*r^2);
 p_true: float(cdf_student_t(t_true, df));
 ci_lower: float(b1 - 2*se_b1);
@@ -95,38 +95,49 @@ FORBIDFLOAT: 0
 
 PRT prt_ans_t:
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: is(abs(ans_t-t_true)<=0.05*abs(t_true)+0.005)
 TANS: true
+FALSEFEEDBACK: <p>Recall \(t=b_1/SE(b_1)\).</p>
 
 PRT prt_ans_p:
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: is(abs(ans_p-p_true)<=0.005)
 TANS: true
+FALSEFEEDBACK: <p>Recompute the one-tailed p-value from the t-distribution with df=36, using the correct (lower) tail for \(H_1:\beta_1<0\).</p>
 
 PRT prt_ans_decision:
 NODE 0:
-SANS: true
-TANS: true
+TEST: AlgEquiv
+SANS: ans_decision
+TANS: if is(ans_p<0.05) then reject else noreject
+FALSEFEEDBACK: <p>Your decision should be consistent with your own p-value: reject \(H_0\) if \(p<0.05\), otherwise do not reject.</p>
 
 PRT prt_ans_r2:
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: is(abs(ans_r2-r2pct)<=0.5)
 TANS: true
+FALSEFEEDBACK: <p>Remember \(R^2=r^2\), reported as a percentage.</p>
 
 PRT prt_ans_ci_lower:
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: is(abs(ans_ci_lower-ci_lower)<=0.05*abs(ci_lower)+0.005)
 TANS: true
 
 PRT prt_ans_ci_upper:
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: is(abs(ans_ci_upper-ci_upper)<=0.05*abs(ci_upper)+0.005)
 TANS: true
 
 QTEST 1:
+DESCRIPTION: All correct (happy path)
 INPUT ans_t: t_true
 INPUT ans_p: p_true
-INPUT ans_decision: ta_decision
+INPUT ans_decision: first(mcq_correct(ta_decision))
 INPUT ans_r2: r2pct
 INPUT ans_ci_lower: ci_lower
 INPUT ans_ci_upper: ci_upper
@@ -136,3 +147,78 @@ EXPECT prt_ans_decision: NODE0-T
 EXPECT prt_ans_r2: NODE0-T
 EXPECT prt_ans_ci_lower: NODE0-T
 EXPECT prt_ans_ci_upper: NODE0-T
+
+QTEST 2:
+DESCRIPTION: Wrong t-statistic, everything else correct
+INPUT ans_t: t_true+1
+INPUT ans_p: p_true
+INPUT ans_decision: first(mcq_correct(ta_decision))
+INPUT ans_r2: r2pct
+INPUT ans_ci_lower: ci_lower
+INPUT ans_ci_upper: ci_upper
+EXPECT prt_ans_t: NODE0-F
+EXPECT prt_ans_p: NODE0-T
+EXPECT prt_ans_decision: NODE0-T
+EXPECT prt_ans_r2: NODE0-T
+EXPECT prt_ans_ci_lower: NODE0-T
+EXPECT prt_ans_ci_upper: NODE0-T
+
+QTEST 3:
+DESCRIPTION: Wrong p-value but decision correctly follows through from the student's own (wrong) p
+INPUT ans_t: t_true
+INPUT ans_p: 100
+INPUT ans_decision: noreject
+INPUT ans_r2: r2pct
+INPUT ans_ci_lower: ci_lower
+INPUT ans_ci_upper: ci_upper
+EXPECT prt_ans_t: NODE0-T
+EXPECT prt_ans_p: NODE0-F
+EXPECT prt_ans_decision: NODE0-T
+EXPECT prt_ans_r2: NODE0-T
+EXPECT prt_ans_ci_lower: NODE0-T
+EXPECT prt_ans_ci_upper: NODE0-T
+
+QTEST 4:
+DESCRIPTION: Correct p-value but decision inconsistent with it
+INPUT ans_t: t_true
+INPUT ans_p: p_true
+INPUT ans_decision: if is(p_true<0.05) then noreject else reject
+INPUT ans_r2: r2pct
+INPUT ans_ci_lower: ci_lower
+INPUT ans_ci_upper: ci_upper
+EXPECT prt_ans_t: NODE0-T
+EXPECT prt_ans_p: NODE0-T
+EXPECT prt_ans_decision: NODE0-F
+EXPECT prt_ans_r2: NODE0-T
+EXPECT prt_ans_ci_lower: NODE0-T
+EXPECT prt_ans_ci_upper: NODE0-T
+
+QTEST 5:
+DESCRIPTION: Wrong R^2 (off by 1 percentage point)
+INPUT ans_t: t_true
+INPUT ans_p: p_true
+INPUT ans_decision: first(mcq_correct(ta_decision))
+INPUT ans_r2: r2pct+1
+INPUT ans_ci_lower: ci_lower
+INPUT ans_ci_upper: ci_upper
+EXPECT prt_ans_t: NODE0-T
+EXPECT prt_ans_p: NODE0-T
+EXPECT prt_ans_decision: NODE0-T
+EXPECT prt_ans_r2: NODE0-F
+EXPECT prt_ans_ci_lower: NODE0-T
+EXPECT prt_ans_ci_upper: NODE0-T
+
+QTEST 6:
+DESCRIPTION: CI bounds swapped (both wrong)
+INPUT ans_t: t_true
+INPUT ans_p: p_true
+INPUT ans_decision: first(mcq_correct(ta_decision))
+INPUT ans_r2: r2pct
+INPUT ans_ci_lower: ci_upper
+INPUT ans_ci_upper: ci_lower
+EXPECT prt_ans_t: NODE0-T
+EXPECT prt_ans_p: NODE0-T
+EXPECT prt_ans_decision: NODE0-T
+EXPECT prt_ans_r2: NODE0-T
+EXPECT prt_ans_ci_lower: NODE0-F
+EXPECT prt_ans_ci_upper: NODE0-F
