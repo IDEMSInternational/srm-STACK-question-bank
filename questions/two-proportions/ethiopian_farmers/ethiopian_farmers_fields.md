@@ -109,9 +109,9 @@ min_expected_true: min(E_AA,E_AB,E_CA,E_CD);
 validity_true: if min_expected_true>=5 then "valid" else "invalid";
 
 ta_mcq1a: [
-  [1, true, "\\( \\hat p_{\\text{small}} - \\hat p_{\\text{large}} \\), the difference in proportions of *non-adopters* between groups"],
+  [1, true, "\\( \\hat p_{\\text{small}} - \\hat p_{\\text{large}} \\), the difference in proportions of <em>non-adopters</em> between groups"],
   [2, false, "\\( \\hat p_{\\text{large}} - \\hat p_{\\text{small}} \\), the difference in proportions of non-adopters between groups"],
-  [3, false, "\\( \\hat p_{\\text{small}} - \\hat p_{\\text{large}} \\), the difference in proportions of *adopters* between groups"],
+  [3, false, "\\( \\hat p_{\\text{small}} - \\hat p_{\\text{large}} \\), the difference in proportions of <em>adopters</em> between groups"],
   [4, false, "The difference in raw counts of non-adopters between the two groups"]
 ];
 
