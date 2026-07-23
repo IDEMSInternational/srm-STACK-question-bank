@@ -1,142 +1,109 @@
 QUESTIONTEXT:
-<p>Eagle Boys advertises that its pizzas have a diameter of 12 inches. A quality-control officer takes a random sample of \(n={@n@}\) pizzas and finds a sample mean diameter of \(\bar{x}={@xbar@}\) inches with sample standard deviation \(s={@s@}\) inches. The officer wants to test, at the \(\alpha=0.05\) significance level, whether the true mean pizza diameter differs from the advertised 12 inches.</p>
+<p>In 2011, Eagle Boys Pizza ran a campaign claiming their pizzas were "Real size 12-inch large pizzas." A sample of \(n={@n@}\) large pizzas was measured, giving sample mean diameter \(\bar{x}={@xbar@}\) inches and sample standard deviation \(s={@s@}\) inches. We wish to test, at significance level \(\alpha=0.05\), whether the mean diameter of Eagle Boys pizzas is actually 12 inches, or not.</p>
 
-<h4>Part 1: Standard error</h4>
-<p>Calculate the standard error of the sample mean, \(SE=\dfrac{s}{\sqrt{n}}\). Give your answer to 4 decimal places.</p>
+<p><b>Part 1.</b> Calculate the standard error of the sample mean, \(SE=\dfrac{s}{\sqrt{n}}\). Give your answer to 4 decimal places.</p>
 [[input:ans1]] [[validation:ans1]] [[feedback:prt_ans1]]
 
-<h4>Part 2: Hypotheses</h4>
-<p>State the null and alternative hypotheses for this test, in terms of the population mean \(\mu\).</p>
-<p>\(H_0:\) [[input:ans2]] [[validation:ans2]] [[feedback:prt_ans2]]</p>
-<p>\(H_1:\) [[input:ans3]] [[validation:ans3]] [[feedback:prt_ans3]]</p>
+<p><b>Part 2.</b> Write down the null and alternative hypotheses for \(\mu\), the population mean pizza diameter.</p>
+<p>\(H_0:\) \(\mu=\) [[input:ans2a]] [[validation:ans2a]]</p>
+<p>\(H_1:\) \(\mu\) [[input:ans2b]] [[validation:ans2b]] [[feedback:prt_ans2b]]</p>
 
-<h4>Part 3: t-score</h4>
-<p>Using your own standard error from Part 1, calculate the test statistic \(t=\dfrac{\bar{x}-12}{SE}\). Give your answer to 2 decimal places.</p>
+<p><b>Part 3.</b> Using your own standard error from Part 1, calculate the t-score \(t=\dfrac{\bar{x}-12}{SE}\). Give your answer to 2 decimal places.</p>
+[[input:ans3]] [[validation:ans3]] [[feedback:prt_ans3]]
+
+<p><b>Part 4.</b> Using the 68-95-99.7 rule and your own t-score from Part 3, choose the approximate P-value range.</p>
 [[input:ans4]] [[validation:ans4]] [[feedback:prt_ans4]]
 
-<h4>Part 4: Approximate P-value</h4>
-<p>Using your own t-score from Part 3 and the 68-95-99.7 rule, which range best describes the (two-tailed) P-value?</p>
+<p><b>Part 5.</b> Based on your answer to Part 4, and using \(\alpha=0.05\), what is the appropriate decision about \(H_0\)?</p>
 [[input:ans5]] [[validation:ans5]] [[feedback:prt_ans5]]
 
-<h4>Part 5: Decision</h4>
-<p>Based on your own answer to Part 4, and testing at \(\alpha=0.05\), what is the correct decision about \(H_0\)?</p>
+<p><b>Part 6.</b> Is the sample size \(n={@n@}\) large enough for the statistical validity conditions (Central Limit Theorem) to hold here?</p>
 [[input:ans6]] [[validation:ans6]] [[feedback:prt_ans6]]
 
-<h4>Part 6: Validity check</h4>
-<p>Is the sample size \(n={@n@}\) large enough for the Central Limit Theorem to justify this t-test?</p>
-[[input:ans7]] [[validation:ans7]] [[feedback:prt_ans7]]
-
 QUESTIONVARIABLES:
-s: rand(11)*0.01 + 0.20;
 n: rand([100,125,150,200]);
-SE_ta: s/sqrt(n);
-
-/* Choose a bucket with the specified weights, away from boundaries */
-w: rand(100);
-bucket_gen: if w<50 then 1 elseif w<70 then 2 elseif w<85 then 3 else 4;
-
-tmag: if bucket_gen=1 then 3.2+rand(19)*0.1
-      elseif bucket_gen=2 then 2.2+rand(8)*0.1
-      elseif bucket_gen=3 then 1.2+rand(8)*0.1
-      else 0.1+rand(9)*0.1;
-
-/* Pizzas run small: t is negative */
-t_exact: -tmag;
-
-xbar_raw: 12 + t_exact*SE_ta;
-xbar: float(round(xbar_raw*1000)/1000);
-
-/* Recompute t and bucket from the rounded, displayed xbar */
-t_ta: (xbar-12)/SE_ta;
-
-bucket_num: if abs(t_ta)>=3 then 1
-            elseif abs(t_ta)>=2 then 2
-            elseif abs(t_ta)>=1 then 3
-            else 4;
-
-h0_ta: mu=12;
-h1_ta: mu#12;
-
-bucket_opts: [[1, is(bucket_num=1), "P < 0.003"],
-              [2, is(bucket_num=2), "0.003 < P < 0.05"],
-              [3, is(bucket_num=3), "0.05 < P < 0.32"],
-              [4, is(bucket_num=4), "P > 0.32"]];
-
-decision_opts: [[reject, is(bucket_num<=2), "Reject H0"],
-                [fail, is(bucket_num>=3), "Fail to reject H0"]];
-
-validity_opts: [[yes, true, "Yes, n is large enough for the CLT to apply"],
-                [no, false, "No, n is too small for the CLT to apply"]];
+s: float(0.20 + 0.10*rand(11)/10);
+mu0: 12;
+/* Choose a bucket with weights 50/20/15/15, then a t value comfortably inside it */
+bucket_pick: rand(100);
+bucket: if bucket_pick<50 then 1 else if bucket_pick<70 then 2 else if bucket_pick<85 then 3 else 4;
+/* bucket 1: |t|>=3, well clear, up to 4.5
+   bucket 2: 2<=|t|<3, clear of both boundaries
+   bucket 3: 1<=|t|<2, clear of both boundaries
+   bucket 4: |t|<1, clear of boundary */
+tmag: if bucket=1 then 3.2+0.1*rand(11) else
+      if bucket=2 then 2.2+0.1*rand(6) else
+      if bucket=3 then 1.2+0.1*rand(6) else
+      0.1+0.1*rand(7);
+t_val: -tmag;
+SE_exact: s/sqrt(n);
+xbar_exact: mu0 + t_val*SE_exact;
+xbar: float(fpprintprec(6,xbar_exact));
+xbar: 0.001*round(xbar_exact*1000);
+SE: 0.0001*round(SE_exact*10000);
+t_display: 0.01*round(t_val*100);
+bucket_label: if bucket=1 then "P<0.003" else
+              if bucket=2 then "0.003<P<0.05" else
+              if bucket=3 then "0.05<P<0.32" else
+              "P>0.32";
+decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0";
 
 GENERALFEEDBACK:
-<p>The standard error is \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{{@s@}}{\sqrt{{@n@}}}={@float(SE_ta)@}\) (note: a common mistake is dividing \(s\) by \(n\) instead of \(\sqrt{n}\)).</p>
+<p>The standard error is \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{{@s@}}{\sqrt{{@n@}}}={@SE@}\). A common mistake is computing \(s/n\) instead of \(s/\sqrt{n}\).</p>
 
-<p>Since we are asking whether the mean differs from 12 (not specifically whether it is smaller or larger), this is a two-tailed test:</p>
-<p>\(H_0:\mu=12\), \(H_1:\mu\neq12\). (A common error here is writing \(H_1:\mu<12\) because the wording suggests pizzas "run small" — but the research question is genuinely two-tailed.)</p>
+<p>The hypotheses are \(H_0:\mu=12\) versus \(H_1:\mu\neq 12\). This is two-tailed, since the research question asks whether the mean diameter is 12 inches "or not" — not specifically whether it is smaller.</p>
 
-<p>The test statistic is \(t=\dfrac{\bar{x}-12}{SE}=\dfrac{{@xbar@}-12}{{@float(SE_ta)@}}={@float(t_ta)@}\). (Take care to compute \(\bar{x}-12\), not \(12-\bar{x}\).)</p>
+<p>The t-score is \(t=\dfrac{\bar{x}-12}{SE}=\dfrac{{@xbar@}-12}{{@SE@}}={@t_display@}\). A common mistake is a sign error, computing \(\dfrac{12-\bar{x}}{SE}\) instead.</p>
 
-<p>By the 68-95-99.7 rule applied to \(|t|={@float(abs(t_ta))@}\):</p>
-[[ if test="bucket_num=1" ]]
-<p>\(|t|\geq 3\), so \(P<0.003\).</p>
-[[ elif test="bucket_num=2" ]]
-<p>\(2\leq|t|<3\), so \(0.003<P<0.05\).</p>
-[[ elif test="bucket_num=3" ]]
-<p>\(1\leq|t|<2\), so \(0.05<P<0.32\).</p>
-[[ else ]]
-<p>\(|t|<1\), so \(P>0.32\).</p>
-[[/ if ]]
+<p>Using the 68-95-99.7 rule with \(|t|={@abs(t_display)@}\), the approximate P-value range is \({@bucket_label@}\).</p>
 
-[[ if test="bucket_num<=2" ]]
-<p>Since the P-value range lies below \(\alpha=0.05\), we reject \(H_0\): there is evidence the mean diameter differs from 12 inches.</p>
-[[ else ]]
-<p>Since the P-value range lies above \(\alpha=0.05\), we fail to reject \(H_0\): there is not enough evidence that the mean diameter differs from 12 inches.</p>
-[[/ if ]]
+<p>Since \(\alpha=0.05\), the decision is: {@decision_label@}.</p>
 
-<p>Finally, since \(n={@n@}>25\), the Central Limit Theorem justifies using this approximate normal-based procedure.</p>
+<p>Since \(n={@n@}\) is much larger than 25, the statistical validity conditions (Central Limit Theorem) are satisfied.</p>
 
 QUESTIONNOTE:
-\(n={@n@}, s={@s@}, \bar{x}={@xbar@}, t={@float(t_ta)@}, \text{bucket}={@bucket_num@}\)
+\(n={@n@}, s={@s@}, \bar{x}={@xbar@}, t={@t_display@}\), bucket {@bucket@} ({@bucket_label@}), {@decision_label@}
 
 INPUT ans1:
 TYPE: numerical
-TANS: SE_ta
+TANS: SE
 ANSWERTEST: NumDecPlaces
 BOXSIZE: 10
 
-INPUT ans2:
+INPUT ans2a:
 TYPE: algebraic
-TANS: h0_ta
+TANS: 12
 ANSWERTEST: AlgEquiv
-BOXSIZE: 10
+BOXSIZE: 5
+SHOWVALIDATION: 0
+
+INPUT ans2b:
+TYPE: dropdown
+TANS: "\\neq 12"
+ANSWERTEST: String
+SHOWVALIDATION: 0
 
 INPUT ans3:
-TYPE: algebraic
-TANS: h1_ta
-ANSWERTEST: AlgEquiv
+TYPE: numerical
+TANS: t_display
+ANSWERTEST: NumDecPlaces
 BOXSIZE: 10
 
 INPUT ans4:
-TYPE: numerical
-TANS: t_ta
-ANSWERTEST: NumDecPlaces
-BOXSIZE: 10
+TYPE: dropdown
+TANS: bucket_label
+ANSWERTEST: String
+SHOWVALIDATION: 0
 
 INPUT ans5:
 TYPE: dropdown
-TANS: bucket_opts
+TANS: decision_label
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
 INPUT ans6:
-TYPE: radio
-TANS: decision_opts
-ANSWERTEST: String
-SHOWVALIDATION: 0
-
-INPUT ans7:
-TYPE: radio
-TANS: validity_opts
+TYPE: dropdown
+TANS: "Yes"
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
@@ -145,7 +112,12 @@ NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans2:
+PRT prt_ans2a:
+NODE 0:
+SANS: true
+TANS: true
+
+PRT prt_ans2b:
 NODE 0:
 SANS: true
 TANS: true
@@ -170,23 +142,18 @@ NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans7:
-NODE 0:
-SANS: true
-TANS: true
-
 QTEST 1:
-INPUT ans1: SE_ta
-INPUT ans2: h0_ta
-INPUT ans3: h1_ta
-INPUT ans4: t_ta
-INPUT ans5: bucket_opts
-INPUT ans6: decision_opts
-INPUT ans7: validity_opts
+INPUT ans1: SE
+INPUT ans2a: 12
+INPUT ans2b: "\\neq 12"
+INPUT ans3: t_display
+INPUT ans4: bucket_label
+INPUT ans5: decision_label
+INPUT ans6: "Yes"
 EXPECT prt_ans1: NODE0-T
-EXPECT prt_ans2: NODE0-T
+EXPECT prt_ans2a: NODE0-T
+EXPECT prt_ans2b: NODE0-T
 EXPECT prt_ans3: NODE0-T
 EXPECT prt_ans4: NODE0-T
 EXPECT prt_ans5: NODE0-T
 EXPECT prt_ans6: NODE0-T
-EXPECT prt_ans7: NODE0-T

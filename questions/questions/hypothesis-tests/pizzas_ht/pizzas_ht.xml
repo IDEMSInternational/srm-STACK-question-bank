@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<question type="stack">
+<name>
+<text>Pizzas ht</text>
+</name>
+<questiontext format="html">
+<text><![CDATA[<p>In 2011, Eagle Boys Pizza ran a campaign claiming their pizzas were "Real size 12-inch large pizzas." A sample of \(n={@n@}\) large pizzas was measured, giving sample mean diameter \(\bar{x}={@xbar@}\) inches and sample standard deviation \(s={@s@}\) inches. We wish to test, at significance level \(\alpha=0.05\), whether the mean diameter of Eagle Boys pizzas is actually 12 inches, or not.</p>
+
+<p><b>Part 1.</b> Calculate the standard error of the sample mean, \(SE=\dfrac{s}{\sqrt{n}}\). Give your answer to 4 decimal places.</p>
+[[input:ans1]] [[validation:ans1]] [[feedback:prt_ans1]]
+
+<p><b>Part 2.</b> Write down the null and alternative hypotheses for \(\mu\), the population mean pizza diameter.</p>
+<p>\(H_0:\) \(\mu=\) [[input:ans2a]] [[validation:ans2a]]</p>
+<p>\(H_1:\) \(\mu\) [[input:ans2b]] [[validation:ans2b]] [[feedback:prt_ans2b]]</p>
+
+<p><b>Part 3.</b> Using your own standard error from Part 1, calculate the t-score \(t=\dfrac{\bar{x}-12}{SE}\). Give your answer to 2 decimal places.</p>
+[[input:ans3]] [[validation:ans3]] [[feedback:prt_ans3]]
+
+<p><b>Part 4.</b> Using the 68-95-99.7 rule and your own t-score from Part 3, choose the approximate P-value range.</p>
+[[input:ans4]] [[validation:ans4]] [[feedback:prt_ans4]]
+
+<p><b>Part 5.</b> Based on your answer to Part 4, and using \(\alpha=0.05\), what is the appropriate decision about \(H_0\)?</p>
+[[input:ans5]] [[validation:ans5]] [[feedback:prt_ans5]]
+
+<p><b>Part 6.</b> Is the sample size \(n={@n@}\) large enough for the statistical validity conditions (Central Limit Theorem) to hold here?</p>
+[[input:ans6]] [[validation:ans6]] [[feedback:prt_ans6]]]]></text>
+</questiontext>
+<questionvariables>
+<text><![CDATA[n: rand([100,125,150,200]);
+s: float(0.20 + 0.10*rand(11)/10);
+mu0: 12;
+/* Choose a bucket with weights 50/20/15/15, then a t value comfortably inside it */
+bucket_pick: rand(100);
+bucket: if bucket_pick<50 then 1 else if bucket_pick<70 then 2 else if bucket_pick<85 then 3 else 4;
+/* bucket 1: |t|>=3, well clear, up to 4.5
+   bucket 2: 2<=|t|<3, clear of both boundaries
+   bucket 3: 1<=|t|<2, clear of both boundaries
+   bucket 4: |t|<1, clear of boundary */
+tmag: if bucket=1 then 3.2+0.1*rand(11) else
+      if bucket=2 then 2.2+0.1*rand(6) else
+      if bucket=3 then 1.2+0.1*rand(6) else
+      0.1+0.1*rand(7);
+t_val: -tmag;
+SE_exact: s/sqrt(n);
+xbar_exact: mu0 + t_val*SE_exact;
+xbar: float(fpprintprec(6,xbar_exact));
+xbar: 0.001*round(xbar_exact*1000);
+SE: 0.0001*round(SE_exact*10000);
+t_display: 0.01*round(t_val*100);
+bucket_label: if bucket=1 then "P<0.003" else
+              if bucket=2 then "0.003<P<0.05" else
+              if bucket=3 then "0.05<P<0.32" else
+              "P>0.32";
+decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0";]]></text>
+</questionvariables>
+<generalfeedback format="html">
+<text><![CDATA[<p>The standard error is \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{{@s@}}{\sqrt{{@n@}}}={@SE@}\). A common mistake is computing \(s/n\) instead of \(s/\sqrt{n}\).</p>
+
+<p>The hypotheses are \(H_0:\mu=12\) versus \(H_1:\mu\neq 12\). This is two-tailed, since the research question asks whether the mean diameter is 12 inches "or not" — not specifically whether it is smaller.</p>
+
+<p>The t-score is \(t=\dfrac{\bar{x}-12}{SE}=\dfrac{{@xbar@}-12}{{@SE@}}={@t_display@}\). A common mistake is a sign error, computing \(\dfrac{12-\bar{x}}{SE}\) instead.</p>
+
+<p>Using the 68-95-99.7 rule with \(|t|={@abs(t_display)@}\), the approximate P-value range is \({@bucket_label@}\).</p>
+
+<p>Since \(\alpha=0.05\), the decision is: {@decision_label@}.</p>
+
+<p>Since \(n={@n@}\) is much larger than 25, the statistical validity conditions (Central Limit Theorem) are satisfied.</p>]]></text>
+</generalfeedback>
+<questionnote format="moodle_auto_format">
+<text>\(n={@n@}, s={@s@}, \bar{x}={@xbar@}, t={@t_display@}\), bucket {@bucket@} ({@bucket_label@}), {@decision_label@}</text>
+</questionnote>
+<input>
+<name>ans1</name>
+<type>numerical</type>
+<tans>SE</tans>
+<boxsize>10</boxsize>
+<forbidfloat>0</forbidfloat>
+</input>
+<input>
+<name>ans2a</name>
+<type>algebraic</type>
+<tans>12</tans>
+<boxsize>5</boxsize>
+<showvalidation>0</showvalidation>
+</input>
+<input>
+<name>ans2b</name>
+<type>dropdown</type>
+<tans>"\\neq 12"</tans>
+<showvalidation>0</showvalidation>
+</input>
+<input>
+<name>ans3</name>
+<type>numerical</type>
+<tans>t_display</tans>
+<boxsize>10</boxsize>
+<forbidfloat>0</forbidfloat>
+</input>
+<input>
+<name>ans4</name>
+<type>dropdown</type>
+<tans>bucket_label</tans>
+<showvalidation>0</showvalidation>
+</input>
+<input>
+<name>ans5</name>
+<type>dropdown</type>
+<tans>decision_label</tans>
+<showvalidation>0</showvalidation>
+</input>
+<input>
+<name>ans6</name>
+<type>dropdown</type>
+<tans>"Yes"</tans>
+<showvalidation>0</showvalidation>
+</input>
+<prt>
+  <name>prt_ans1</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans1-1-T</trueanswernote>
+    <falseanswernote>prt_ans1-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans2a</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans2a-1-T</trueanswernote>
+    <falseanswernote>prt_ans2a-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans2b</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans2b-1-T</trueanswernote>
+    <falseanswernote>prt_ans2b-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans3</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans3-1-T</trueanswernote>
+    <falseanswernote>prt_ans3-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans4</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans4-1-T</trueanswernote>
+    <falseanswernote>prt_ans4-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans5</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans5-1-T</trueanswernote>
+    <falseanswernote>prt_ans5-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans6</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans6-1-T</trueanswernote>
+    <falseanswernote>prt_ans6-1-F</falseanswernote>
+  </node>
+</prt>
+<qtest>
+  <testcase>1</testcase>
+  <testinput>
+    <name>ans1</name>
+    <value>SE</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>12</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>"\\neq 12"</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>t_display</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>bucket_label</value>
+  </testinput>
+  <testinput>
+    <name>ans5</name>
+    <value>decision_label</value>
+  </testinput>
+  <testinput>
+    <name>ans6</name>
+    <value>"Yes"</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2a</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2a-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2b</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2b-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans5</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans5-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans6</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans6-1-T</expectedanswernote>
+  </expected>
+</qtest>
+</question>
+</quiz>
