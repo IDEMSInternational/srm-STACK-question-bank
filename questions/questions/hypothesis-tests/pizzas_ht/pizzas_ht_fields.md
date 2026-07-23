@@ -1,183 +1,164 @@
 QUESTIONTEXT:
-<p>Eagle Boys advertises that its pizzas have a diameter of 12 inches. A quality-control inspector takes a random sample of \(n={@n@}\) pizzas and finds a sample mean diameter of \(\bar{x} = {@xbar@}\) inches, with sample standard deviation \(s = {@s@}\) inches.</p>
+<p>Eagle Boys claims that its pizzas have a mean diameter of \(12\) inches. A quality-control officer measures a random sample of \(n={@n@}\) pizzas and finds a sample mean diameter of \(\bar{x}={@xbar@}\) inches, with sample standard deviation \(s={@s@}\) inches.</p>
 
-<p>The inspector wants to test, at the \(\alpha = 0.05\) significance level, whether the true mean pizza diameter differs from the advertised 12 inches.</p>
+<p>She wants to test, at the \(\alpha=0.05\) significance level, whether the mean diameter differs from the claimed \(12\) inches (in either direction).</p>
 
 <h4>Part 1 — Standard error</h4>
-<p>Compute the standard error of the sample mean, \(SE = \dfrac{s}{\sqrt{n}}\), correct to at least 4 decimal places.</p>
-[[input:ans_se]] [[validation:ans_se]] [[feedback:prt_ans_se]]
+<p>Calculate the standard error of the sample mean, \(SE=\dfrac{s}{\sqrt{n}}\). Give your answer to 4 decimal places.</p>
+[[input:ans1]] [[validation:ans1]] [[feedback:prt_ans1]]
 
 <h4>Part 2 — Hypotheses</h4>
-<p>State the null and alternative hypotheses for this test, in terms of the population mean \(\mu\).</p>
-<p>\(H_0:\) [[input:ans_h0]] [[validation:ans_h0]] [[feedback:prt_ans_h0]]</p>
-<p>\(H_1:\) [[input:ans_h1]] [[validation:ans_h1]] [[feedback:prt_ans_h1]]</p>
+<p>State the null and alternative hypotheses (using \(\mu\) for the true mean pizza diameter).</p>
+<p>\(H_0:\) [[input:ans2a]] [[validation:ans2a]] [[feedback:prt_ans2a]]</p>
+<p>\(H_1:\) [[input:ans2b]] [[validation:ans2b]] [[feedback:prt_ans2b]]</p>
 
-<h4>Part 3 — t-score</h4>
-<p>Using your own standard error from Part 1, compute the test statistic \(t = \dfrac{\bar{x}-12}{SE}\), correct to 2 decimal places.</p>
-[[input:ans_t]] [[validation:ans_t]] [[feedback:prt_ans_t]]
+<h4>Part 3 — Test statistic</h4>
+<p>Using your own standard error from Part 1, calculate the t-score \(t=\dfrac{\bar{x}-12}{SE}\). Give your answer to 2 decimal places.</p>
+[[input:ans3]] [[validation:ans3]] [[feedback:prt_ans3]]
 
 <h4>Part 4 — Approximate P-value</h4>
-<p>Using the 68-95-99.7 rule and your own t-score from Part 3, select the range that best describes the (two-tailed) P-value.</p>
-[[input:ans_bucket]] [[validation:ans_bucket]] [[feedback:prt_ans_bucket]]
+<p>Using the 68-95-99.7 rule and your own t-score from Part 3, select the range that best approximates the two-tailed P-value.</p>
+[[input:ans4]] [[validation:ans4]] [[feedback:prt_ans4]]
 
 <h4>Part 5 — Decision</h4>
-<p>Based on your answer to Part 4, and using \(\alpha = 0.05\), what is the correct decision?</p>
-[[input:ans_decision]] [[validation:ans_decision]] [[feedback:prt_ans_decision]]
+<p>Based on your bucket answer from Part 4, and testing at \(\alpha=0.05\), what is the decision about \(H_0\)?</p>
+[[input:ans5]] [[validation:ans5]] [[feedback:prt_ans5]]
 
 <h4>Part 6 — Validity check</h4>
 <p>Is the sample size \(n={@n@}\) large enough to justify using the Central Limit Theorem here?</p>
-[[input:ans_validity]] [[validation:ans_validity]] [[feedback:prt_ans_validity]]
+[[input:ans6]] [[validation:ans6]] [[feedback:prt_ans6]]
 
 QUESTIONVARIABLES:
 n: rand([100,125,150,200]);
-s: (20+rand(11))/100;
-se_exact: s/sqrt(n);
-se: float(se_exact);
+s: rand([0.20,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.30]);
+SE_exact: s/sqrt(n);
 
 bucket_pick: rand(100);
-bucket: if bucket_pick<50 then 4 elseif bucket_pick<70 then 3 elseif bucket_pick<85 then 2 else 1;
+tA_list: makelist(3.1+0.1*i, i, 0, 13);
+tB_list: makelist(2.1+0.1*i, i, 0, 7);
+tC_list: makelist(1.1+0.1*i, i, 0, 7);
+tD_list: makelist(0.1+0.1*i, i, 0, 7);
 
-t_mag: if bucket=4 then 3.1+rand(14)/10
-       elseif bucket=3 then 2.1+rand(8)/10
-       elseif bucket=2 then 1.1+rand(8)/10
-       else 0.1+rand(8)/10;
+tmag: if bucket_pick<50 then rand(tA_list)
+      elseif bucket_pick<70 then rand(tB_list)
+      elseif bucket_pick<85 then rand(tC_list)
+      else rand(tD_list);
 
-t_teacher: -t_mag;
+t_target: -tmag;
+xbar_raw: 12 + t_target*SE_exact;
+xbar: float(round(1000*xbar_raw)/1000);
+t_true: (xbar-12)/SE_exact;
 
-xbar_exact: 12 + t_teacher*se_exact;
-xbar: float(round(xbar_exact*1000)/1000);
+bucket: if abs(t_true)>=3 then "A" elseif abs(t_true)>=2 then "B" elseif abs(t_true)>=1 then "C" else "D";
+decision: if bucket="A" or bucket="B" then "reject" else "failtoreject";
 
-t_actual: float((xbar-12)/se);
-t_display: float(round(t_actual*100)/100);
+ta1: SE_exact;
+ta2a: mu=12;
+ta2b: mu # 12;
+ta3: t_true;
 
-bucket_label: if bucket=4 then "P < 0.003"
-              elseif bucket=3 then "0.003 < P < 0.05"
-              elseif bucket=2 then "0.05 < P < 0.32"
-              else "P > 0.32";
-
-decision_label: if bucket>=3 then "Reject H0" else "Fail to reject H0";
-
-ta_se: se;
-ta_h0: mu=12;
-ta_h1: mu#12;
-ta_t: t_display;
-
-/* MCQ model-answer lists: [[value, correct, display], ...] */
-bucket_options: [[1, is(bucket=1), "P > 0.32"],
-                 [2, is(bucket=2), "0.05 < P < 0.32"],
-                 [3, is(bucket=3), "0.003 < P < 0.05"],
-                 [4, is(bucket=4), "P < 0.003"]];
-decision_options: [[decrej, is(decision_label="Reject H0"), "Reject H0"],
-                    [decfail, is(decision_label="Fail to reject H0"), "Fail to reject H0"]];
-validity_options: [[validyes, true, "Yes"],
-                    [validno, false, "No"]];
-
-ta_bucket: bucket_options;
-tac_bucket: bucket;
-ta_decision: decision_options;
-tac_decision: if bucket>=3 then decrej else decfail;
-ta_validity: validity_options;
-tac_validity: validyes;
+bucket_answer: if bucket="A" then "R1" elseif bucket="B" then "R2" elseif bucket="C" then "R3" else "R4";
+decision_answer: if decision="reject" then "reject" else "failreject";
+validity_answer: "yes";
 
 GENERALFEEDBACK:
 <p><strong>Worked solution</strong></p>
-<p>Standard error: \(SE = \dfrac{s}{\sqrt{n}} = \dfrac{{@s@}}{\sqrt{{@n@}}} = {@se@}\). A common mistake is dividing by \(n\) instead of \(\sqrt{n}\) — this gives a much smaller (wrong) SE.</p>
-<p>Hypotheses: since the research question is whether the diameter differs from 12 (not specifically whether it is smaller), this is a two-tailed test: \(H_0:\mu=12\), \(H_1:\mu\neq 12\). Choosing a one-tailed \(H_1:\mu<12\) is a common error here, even though the sample mean happens to be below 12.</p>
-<p>Test statistic: \(t = \dfrac{\bar{x}-12}{SE} = \dfrac{{@xbar@}-12}{{@se@}} = {@t_display@}\). Note it is \(\bar{x}-12\), not \(12-\bar{x}\) — a sign error here flips the direction of the t-score.</p>
-<p>Using the 68-95-99.7 rule for the sampling distribution of \(t\): \(|t| = {@abs(t_display)@}\) falls in the range <strong>{@bucket_label@}</strong>.</p>
-<p>Decision at \(\alpha=0.05\): since the approximate P-value is {@bucket_label@}, we <strong>{@decision_label@}</strong>.</p>
-<p>Validity check: with \(n={@n@}\) (well over 25-30), the Central Limit Theorem applies, so using a t/normal-based procedure is justified.</p>
+<p>Standard error: \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{ {@s@} }{\sqrt{ {@n@} }} = {@float(SE_exact)@}\).</p>
+<p>Since the research question asks whether the mean differs from \(12\) in either direction, the hypotheses are two-tailed: \(H_0:\mu=12\) vs \(H_1:\mu\neq12\). (A common mistake is to write a one-tailed \(H_1:\mu<12\) just because the sample mean happens to be below \(12\) — the claim being tested is "different from", not "less than".)</p>
+<p>Test statistic: \(t=\dfrac{\bar{x}-12}{SE}=\dfrac{ {@xbar@}-12}{ {@float(SE_exact)@} } = {@float(t_true)@}\). (A common slip here is computing \(s/n\) instead of \(s/\sqrt{n}\) for the SE, or reversing the numerator to \(12-\bar{x}\).)</p>
+<p>Using the 68-95-99.7 rule for a two-tailed test: \(|t|\ge3\) gives \(P<0.003\); \(2\le|t|<3\) gives \(0.003<P<0.05\); \(1\le|t|<2\) gives \(0.05<P<0.32\); \(|t|<1\) gives \(P>0.32\). Here \(|t|={@float(abs(t_true))@}\), which falls in bucket {@bucket@}.</p>
+<p>At \(\alpha=0.05\): if \(P<0.05\) we reject \(H_0\); otherwise we fail to reject \(H_0\). Since \(n={@n@}>25\), the CLT applies and the sampling distribution of \(\bar{x}\) is approximately normal, so this reasoning is valid.</p>
 
 QUESTIONNOTE:
-\(n={@n@}, s={@s@}, \bar{x}={@xbar@}, t={@t_display@}\), bucket {@bucket@} ({@decision_label@})
+\(n={@n@}, s={@s@}, \bar{x}={@xbar@}, SE={@float(SE_exact)@}, t={@float(t_true)@}\), bucket={@bucket@}, decision={@decision@}
 
-INPUT ans_se:
+INPUT ans1:
 TYPE: numerical
-TANS: ta_se
-ANSWERTEST: NumRelative
+TANS: ta1
+ANSWERTEST: NumDecPlaces
+SHOWVALIDATION: 1
 
-INPUT ans_h0:
+INPUT ans2a:
 TYPE: algebraic
-TANS: ta_h0
+TANS: ta2a
 ANSWERTEST: AlgEquiv
-BOXSIZE: 10
 
-INPUT ans_h1:
+INPUT ans2b:
 TYPE: algebraic
-TANS: ta_h1
+TANS: ta2b
 ANSWERTEST: AlgEquiv
-BOXSIZE: 10
 
-INPUT ans_t:
+INPUT ans3:
 TYPE: numerical
-TANS: ta_t
-ANSWERTEST: NumAbsolute
+TANS: ta3
+ANSWERTEST: NumDecPlaces
+SHOWVALIDATION: 1
 
-INPUT ans_bucket:
+INPUT ans4:
 TYPE: dropdown
-TANS: ta_bucket
-ANSWERTEST: CasEqual
+TANS: bucket_answer
+ANSWERTEST: String
 SHOWVALIDATION: 0
 
-INPUT ans_decision:
+INPUT ans5:
 TYPE: radio
-TANS: ta_decision
-ANSWERTEST: CasEqual
+TANS: decision_answer
+ANSWERTEST: String
 SHOWVALIDATION: 0
 
-INPUT ans_validity:
+INPUT ans6:
 TYPE: radio
-TANS: ta_validity
-ANSWERTEST: CasEqual
+TANS: validity_answer
+ANSWERTEST: String
 SHOWVALIDATION: 0
 
-PRT prt_ans_se:
+PRT prt_ans1:
 NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans_h0:
+PRT prt_ans2a:
 NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans_h1:
+PRT prt_ans2b:
 NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans_t:
+PRT prt_ans3:
 NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans_bucket:
+PRT prt_ans4:
 NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans_decision:
+PRT prt_ans5:
 NODE 0:
 SANS: true
 TANS: true
 
-PRT prt_ans_validity:
+PRT prt_ans6:
 NODE 0:
 SANS: true
 TANS: true
 
 QTEST 1:
-INPUT ans_se: ta_se
-INPUT ans_h0: ta_h0
-INPUT ans_h1: ta_h1
-INPUT ans_t: ta_t
-INPUT ans_bucket: ta_bucket
-INPUT ans_decision: ta_decision
-INPUT ans_validity: ta_validity
-EXPECT prt_ans_se: NODE0-T
-EXPECT prt_ans_h0: NODE0-T
-EXPECT prt_ans_h1: NODE0-T
-EXPECT prt_ans_t: NODE0-T
-EXPECT prt_ans_bucket: NODE0-T
-EXPECT prt_ans_decision: NODE0-T
-EXPECT prt_ans_validity: NODE0-T
+INPUT ans1: ta1
+INPUT ans2a: ta2a
+INPUT ans2b: ta2b
+INPUT ans3: ta3
+INPUT ans4: bucket_answer
+INPUT ans5: decision_answer
+INPUT ans6: validity_answer
+EXPECT prt_ans1: NODE0-T
+EXPECT prt_ans2a: NODE0-T
+EXPECT prt_ans2b: NODE0-T
+EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans4: NODE0-T
+EXPECT prt_ans5: NODE0-T
+EXPECT prt_ans6: NODE0-T
