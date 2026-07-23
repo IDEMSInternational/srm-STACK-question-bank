@@ -131,3 +131,176 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 6 — reviewer · round 1 (2026-07-23T20:19:53)
+
+**Key facts to carry forward:**
+- The draft's placeholder PRTs/QTEST have been replaced with real follow-through-based logic (see below); ans1-ans4 grade via `AlgEquiv` on explicit tolerance booleans computed in feedbackvariables (not `NumDecPlaces` directly, per project convention), while ans5/ans6 (MCQ radio, boolean/integer valued) use `CasEqual` for exact structural match, which is an appropriate exception to the "avoid specialized tests" guidance since these are atom/integer identity checks, not numeric-surface-form checks.
+- Every qtest case for ans5 uses the symbolic `valid_p` (not a hardcoded true/false) so the case remains correct regardless of which random `n` is drawn for that instantiation — do not replace it with a literal boolean in any future revision.
+- Diagnostic "matches a specific classic mistake" node branches (node 1 in prt_ans1/2/3/4, nodes 1-3 in prt_ans6) all have their TRUE branch explicitly scored 0 with penalty 0.1 (overriding the node-true default of score 1/penalty 0), since "true" there means "matches the wrong pattern," not "correct" — any further edits to these PRTs must preserve those explicit overrides or QTEST expectations will start failing silently.
+- Below is the full replacement PRT/QTEST spec (all six PRTs and all qtest cases are newly authored; nothing here reuses the placeholder).
+- PRT prt_ans1:
+- NODE 0:
+- TEST: AlgEquiv
+- SANS: correct_p
+- TANS: true
+- FALSENEXT: 1
+- NODE 1:
+- TANS: true
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>It looks like you divided by \(n\) instead of \(\sqrt{n}\) — remember \(SE=s/\sqrt{n}\), not \(s/n\).</p>
+- FALSEFEEDBACK: <p>Not correct — check your calculation of \(SE=s/\sqrt{n}\).</p>
+- (feedbackvariables for prt_ans1: tol: 0.0005; correct_p: is(abs(ans1-se_val)<tol); mistake_p: is(abs(ans1-float(s/n))<tol); — NODE1's SANS should be mistake_p)
+- NODE 1 (correction):
+- SANS: mistake_p
+- TANS: true
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>It looks like you divided by \(n\) instead of \(\sqrt{n}\) — remember \(SE=s/\sqrt{n}\), not \(s/n\).</p>
+- FALSEFEEDBACK: <p>Not correct — check your calculation of \(SE=s/\sqrt{n}\).</p>
+- PRT prt_ans2:
+- NODE 0:
+- TEST: AlgEquiv
+- SANS: correct_p
+- TANS: true
+- FALSENEXT: 1
+- NODE 1:
+- SANS: mistake_p
+- TANS: true
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>It looks like you used your \(SE\) directly as the margin of error — remember to multiply by \(z^*=1.96\).</p>
+- FALSEFEEDBACK: <p>Not correct — check \(ME=z^*\times SE\), using your own \(SE\) from Part 1.</p>
+- PRT prt_ans3:
+- NODE 0:
+- TEST: AlgEquiv
+- SANS: correct_p
+- TANS: true
+- FALSENEXT: 1
+- NODE 1:
+- SANS: signerror_p
+- TANS: true
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>This matches the upper bound, not the lower bound — the lower bound is \(\bar{x}-ME\).</p>
+- FALSEFEEDBACK: <p>Not correct — check your arithmetic for \(\bar{x}-ME\), using your own \(ME\) from Part 2.</p>
+- PRT prt_ans4:
+- NODE 0:
+- TEST: AlgEquiv
+- SANS: correct_p
+- TANS: true
+- FALSENEXT: 1
+- NODE 1:
+- SANS: signerror_p
+- TANS: true
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>This matches the lower bound, not the upper bound — the upper bound is \(\bar{x}+ME\).</p>
+- FALSEFEEDBACK: <p>Not correct — check your arithmetic for \(\bar{x}+ME\), using your own \(ME\) from Part 2.</p>
+- PRT prt_ans5:
+- NODE 0:
+- TEST: CasEqual
+- SANS: ans5
+- TANS: valid_p
+- PRT prt_ans6:
+- NODE 0:
+- TEST: CasEqual
+- SANS: ans6
+- TANS: 2
+- FALSENEXT: 1
+- NODE 1:
+- SANS: ans6
+- TANS: 1
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>This describes a probability statement about a fixed interval containing a fixed parameter — that's not what "95% confidence" means. The confidence level describes the long-run success rate of the method.</p>
+- FALSENEXT: 2
+- NODE 2:
+- SANS: ans6
+- TANS: 3
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>This describes individual bears, but the interval is about the population mean weight \(\mu\), not individual weights.</p>
+- FALSENEXT: 3
+- NODE 3:
+- SANS: ans6
+- TANS: 4
+- TRUESCORE: 0
+- TRUEPENALTY: 0.1
+- TRUEFEEDBACK: <p>This describes the sampling distribution of \(\bar{x}\) across repeated samples, not what a single confidence interval tells us about \(\mu\).</p>
+- FALSEFEEDBACK: <p>Not correct — review what "95% confidence" actually means for this interval.</p>
+- QTEST 1:
+- DESCRIPTION: Fully correct answers throughout
+- INPUT ans1: se
+- INPUT ans2: me
+- INPUT ans3: lower
+- INPUT ans4: upper
+- INPUT ans5: valid_p
+- INPUT ans6: 2
+- EXPECT prt_ans1: NODE0-T
+- EXPECT prt_ans2: NODE0-T
+- EXPECT prt_ans3: NODE0-T
+- EXPECT prt_ans4: NODE0-T
+- EXPECT prt_ans5: NODE0-T
+- EXPECT prt_ans6: NODE0-T
+- QTEST 2:
+- DESCRIPTION: Classic SE mistake (s/n instead of s/sqrt(n))
+- INPUT ans1: s/n
+- EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+- QTEST 3:
+- DESCRIPTION: Follow-through — consistently wrong SE (forgot sqrt) should still earn ME/bounds credit
+- INPUT ans1: s/n
+- INPUT ans2: z*(s/n)
+- INPUT ans3: xbar-z*(s/n)
+- INPUT ans4: xbar+z*(s/n)
+- EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+- EXPECT prt_ans2: NODE0-T
+- EXPECT prt_ans3: NODE0-T
+- EXPECT prt_ans4: NODE0-T
+- QTEST 4:
+- DESCRIPTION: Correct SE/ME but sign-flipped bounds — must be marked wrong independent of Parts 1-2
+- INPUT ans1: se
+- INPUT ans2: me
+- INPUT ans3: xbar+me
+- INPUT ans4: xbar-me
+- EXPECT prt_ans1: NODE0-T
+- EXPECT prt_ans2: NODE0-T
+- EXPECT prt_ans3: NODE1-T SCORE=0 PENALTY=0.1
+- EXPECT prt_ans4: NODE1-T SCORE=0 PENALTY=0.1
+- QTEST 5:
+- DESCRIPTION: Validity check graded strictly off actual n, regardless of an unrelated wrong SE
+- INPUT ans1: s/n
+- INPUT ans5: valid_p
+- EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+- EXPECT prt_ans5: NODE0-T
+- QTEST 6:
+- DESCRIPTION: Validity check answered incorrectly (opposite of actual n)
+- INPUT ans5: not valid_p
+- EXPECT prt_ans5: NODE0-F
+- QTEST 7:
+- DESCRIPTION: Interpretation — probability misinterpretation distractor
+- INPUT ans6: 1
+- EXPECT prt_ans6: NODE1-T SCORE=0 PENALTY=0.1
+- QTEST 8:
+- DESCRIPTION: Interpretation — individual-bears misinterpretation distractor
+- INPUT ans6: 3
+- EXPECT prt_ans6: NODE2-T SCORE=0 PENALTY=0.1
+- QTEST 9:
+- DESCRIPTION: Interpretation — repeated-sample-means misinterpretation distractor
+- INPUT ans6: 4
+- EXPECT prt_ans6: NODE3-T SCORE=0 PENALTY=0.1
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: MINOR ISSUES
+SELF_FIXED:
+- (none)
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- Numerical inputs for parts 1-4 rely on the student typing a manually-rounded decimal; consider adding syntax hints or explicit "enter as a decimal, not a fraction" wording to reduce ambiguity, since numerical inputs don't echo validation as richly as algebraic ones.
+- Part 5's distractor options could also include a distractor about "the sample mean will be within 1.96 SE of mu 95% of the time" style wording, which is subtly different from the interval-based ones already present, for extra discriminating power.
+```
+
