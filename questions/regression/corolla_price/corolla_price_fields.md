@@ -36,7 +36,7 @@ r2pct: float(100*r^2);
 p_true: float(cdf_student_t(t_true, df));
 ci_lower: float(b1 - 2*se_b1);
 ci_upper: float(b1 + 2*se_b1);
-ta_decision: [[reject, p_true<0.05, "Reject H0"],[noreject, p_true>=0.05, "Do not reject H0"]];
+ta_decision: [[reject, is(p_true<0.05), "Reject H0"],[noreject, is(p_true>=0.05), "Do not reject H0"]];
 
 GENERALFEEDBACK:
 <p>The test statistic is
