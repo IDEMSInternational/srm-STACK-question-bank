@@ -136,3 +136,23 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 8 — reviewer · round 1 (2026-07-23T18:29:46)
+
+**Key facts to carry forward:**
+- Verified all 5 qtest cases against the actual PRT node logic (NODE0/NODE1 routing, TRUESCORE overrides, default false-branch scoring) and all expected scores/penalties/notes are consistent with STACK's terminal-node-only penalty rule.
+- Confirmed no degenerate coincidences in the qtest wrong-answer cases: n1*r2 ≠ n1*r2^2 for all r2∈{2,3,4} given n1≥1 (verified n1's true range is [4,385] across the s/E1 randomization), and n1*r2^2+7 ≠ n1*r2 always since the RHS-minus-7 term is strictly negative.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: LOOKS GOOD
+SELF_FIXED:
+- (none)
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- The plan's suggested "boundary case where (z·s/E)² is already an exact integer" qtest is not actually constructible: n1 is derived from randomized s/E1 via question variables, and qtest can only supply input values, not override s/E1 to force an exact square — so this suggestion can't be exercised deterministically without a dedicated non-random variant, similar to the already-noted part-4 direction limitation.
+- Minor style nit (not a bug): question variables introduce indirection symbols `option_larger`/`option_smaller`/`option_same`/`option_cant` purely to hold atoms `larger`/`smaller`/`same_size`/`cant_tell` — functionally fine, but could be simplified by using the atoms directly in `mcq_ans` without the extra aliasing variables.
+```
+
