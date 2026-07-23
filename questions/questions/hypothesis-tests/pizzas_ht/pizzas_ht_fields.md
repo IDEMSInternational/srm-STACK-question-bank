@@ -61,6 +61,10 @@ bucket_answer: if bucket="A" then "R1" elseif bucket="B" then "R2" elseif bucket
 decision_answer: if decision="reject" then "reject" else "failreject";
 validity_answer: "yes";
 
+ta4: [[1, is(bucket="A"), "\\(P<0.003\\)"], [2, is(bucket="B"), "\\(0.003<P<0.05\\)"], [3, is(bucket="C"), "\\(0.05<P<0.32\\)"], [4, is(bucket="D"), "\\(P>0.32\\)"]];
+ta5: [[1, is(decision="reject"), "Reject \\(H_0\\)"], [2, is(decision="failtoreject"), "Fail to reject \\(H_0\\)"]];
+ta6: [[1, true, "Yes, the CLT applies"], [2, false, "No, the sample is too small"]];
+
 GENERALFEEDBACK:
 <p><strong>Worked solution</strong></p>
 <p>Standard error: \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{ {@s@} }{\sqrt{ {@n@} }} = {@float(SE_exact)@}\).</p>
@@ -96,19 +100,19 @@ SHOWVALIDATION: 1
 
 INPUT ans4:
 TYPE: dropdown
-TANS: bucket_answer
+TANS: ta4
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
 INPUT ans5:
 TYPE: radio
-TANS: decision_answer
+TANS: ta5
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
 INPUT ans6:
 TYPE: radio
-TANS: validity_answer
+TANS: ta6
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
