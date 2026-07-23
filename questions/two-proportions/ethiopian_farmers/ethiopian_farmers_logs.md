@@ -59,3 +59,17 @@ PRT/QTEST SUGGESTIONS:
 - Test follow-through explicitly: a student who enters a wrong p̂ pair (or odds pair) but then correctly propagates it through z/decision/CI should score full follow-through credit on those downstream nodes despite the initial slip.
 ```
 
+## Entry 3 — author · attempt 1/3 (2026-07-23T18:28:26)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+
+Deviations reported: - Plan's STRUCTURE section (non-negotiable) describes decision/validity MCQ grading as "follow-through logic" — that logic is a PRT concern belonging to Reviewer, not something I can express via ANSWERTEST/TANS. I used `String` as a placeholder ANSWERTEST for all radio inputs (comparing the selected option number) since MCQ correctness for these ultimately depends on follow-through comparison against the student's own upstream values, not a fixed teacher value — flagging this explicitly so Reviewer knows to build real follow-through comparison logic for ans1d, ans2d, ans3b (and to note the guaranteed z²=χ² equivalence, and the expected CI/test-decision divergence near boundaries, per the plan's PRT/QTEST section).
+- Plan calls for a two-number input for p̂ pair, odds pair, and CIs; I implemented these as algebraic inputs accepting a Maxima list `[a,b]`, graded with NumRelative (which STACK's numerical tests support for lists per the Numerical Testing note) — this is a reasonable literal reading of "two-number input" not explicitly specified as a distinct STACK input type, so noted here rather than treated as silent.
+```
+
