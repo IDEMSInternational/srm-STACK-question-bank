@@ -170,3 +170,24 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 10 — reviewer · round 1 (2026-07-23T18:27:32)
+
+**Key facts to carry forward:**
+- The borderline t-bin (tcase=2) now targets |t| ∈ {1.5,1.6,1.7,1.8,1.9} (df=36), straddling the true critical value ≈1.688, so real variants now sometimes have true decision "do not reject H0" — this was previously impossible with `2+rand(2)`.
+
+**Reference files fetched:**
+- (none)
+
+**Already available (fetched earlier this session, not re-fetched):**
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
+
+```text
+VERDICT: MINOR ISSUES
+SELF_FIXED:
+- Per Planner's explicit instruction this round, widened the "borderline" t-bin from `2+rand(2)` (|t| ∈ {2,3}, always p<0.05 at df=36) to `float((15+rand(5))/10)` (|t| ∈ {1.5,...,1.9}), which straddles the true df=36 critical value (t≈1.688 for one-tailed α=0.05) so genuine "do not reject" variants now actually occur. This is a one-line change contained entirely within QUESTIONVARIABLES — `se_b1`, `t_true`, `r`, `p_true`, `ci_lower/upper` are all still computed the same downstream formulas from `t_target`/`b1`, so nothing else needs to change; no division-by-zero risk since `t_target` stays comfortably away from 0.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- The qtest suite still lacks a case drawn from the new borderline bin exercising a genuine "do not reject" true-answer variant; since qtest cases use fixed crafted values independent of the random draw, this is optional/cosmetic per Planner's own note ("add ... if useful ... but this is optional") and not required for correctness.
+```
+
