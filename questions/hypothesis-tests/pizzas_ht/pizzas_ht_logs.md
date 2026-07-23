@@ -259,3 +259,25 @@ STACK API check: could not be completed
 Not well-formed XML: not well-formed (invalid token): line 155, column 31
 ```
 
+## Entry 17 — reviewer-self-fix · attempt 2/3 (2026-07-23T17:14:13)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: FAILED
+
+Seed 1: 2 test case(s) failed — 
+  Test case 3, input 'ans1': entered '0.11/sqrt(2)' (status: Score)
+  Test case 3, input 'ans3': entered '-(2.61818181818*sqrt(2))' (status: Score)
+  Test case 3, input 'ans4': entered '' (status: Blank, errors: STACK received <code>mod(1,4)+1</code> but this is not listed by the teacher as an option.)
+  Test case 3, PRT 'prt_ans3': got score 1 (expected 1), penalty 0 (expected 0), answer note 'prt_ans3-1-F | ATLogic_True. | prt_ans3-2-T' (expected 'prt_ans3-2-T')
+  Test case 3, PRT 'prt_ans4': got score None (expected 0), penalty None (expected 0.1), answer note '' (expected 'prt_ans4-1-F') —  (Score, Penalty, Answer note)
+  Test case 4, input 'ans1': entered '0.11/sqrt(2)' (status: Score)
+  Test case 4, input 'ans3': entered '-(2.61818181818*sqrt(2))' (status: Score)
+  Test case 4, input 'ans4': entered '' (status: Blank, errors: STACK received <code>mod(1,4)+1</code> but this is not listed by the teacher as an option.)
+  Test case 4, input 'ans5': entered 2 (status: Score)
+  Test case 4, PRT 'prt_ans4': got score None (expected 0), penalty None (expected 0.1), answer note '' (expected 'prt_ans4-1-F') —  (Score, Penalty, Answer note)
+  Test case 4, PRT 'prt_ans5': got score None (expected 1), penalty None (expected 0), answer note '' (expected 'prt_ans5-1-T') —  (Score, Penalty, Answer note)
+```
+

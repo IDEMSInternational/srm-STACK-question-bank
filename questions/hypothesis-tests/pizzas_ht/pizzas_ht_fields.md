@@ -141,11 +141,11 @@ SHOWVALIDATION: 0
 
 PRT prt_ans1:
 NODE 0:
-SANS: is(abs(ans1-se_true)<=0.01*se_true)
+SANS: is(abs(ans1-se_true)&lt;=0.01*se_true)
 TANS: true
 FALSENEXT: 1
 NODE 1:
-SANS: is(abs(ans1-(s/n))<=0.01*(s/n))
+SANS: is(abs(ans1-(s/n))&lt;=0.01*(s/n))
 TANS: true
 TRUESCORE: 0
 TRUEFEEDBACK: <p>It looks like you divided \(s\) by \(n\) instead of \(\sqrt{n}\). Recall \(SE=s/\sqrt{n}\).</p>
@@ -171,12 +171,12 @@ TRUESCORE: 0
 TRUEFEEDBACK: <p>Your standard error is zero, so a \(t\)-score cannot be computed from it.</p>
 FALSENEXT: 1
 NODE 1:
-SANS: is(abs(ans3-(xbar-12)/ans1)<=0.02)
+SANS: is(abs(ans3-(xbar-12)/ans1)&lt;=0.02)
 TANS: true
 FALSENEXT: 2
 TRUEFEEDBACK: <p>Correct — well done.</p>
 NODE 2:
-SANS: is(abs(ans3-(12-xbar)/ans1)<=0.02)
+SANS: is(abs(ans3-(12-xbar)/ans1)&lt;=0.02)
 TANS: true
 TRUESCORE: 0
 TRUEFEEDBACK: <p>It looks like you flipped the sign — use \(t=(\bar{x}-\mu_0)/SE\), not \((\mu_0-\bar{x})/SE\).</p>

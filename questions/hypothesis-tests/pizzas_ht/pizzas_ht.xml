@@ -152,7 +152,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>is(abs(ans1-se_true)<=0.01*se_true)</sans>
+    <sans>is(abs(ans1-se_true)&lt;=0.01*se_true)</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1-1-T</trueanswernote>
     <falsenextnode>1</falsenextnode>
@@ -161,7 +161,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>1</name>
     <answertest>AlgEquiv</answertest>
-    <sans>is(abs(ans1-(s/n))<=0.01*(s/n))</sans>
+    <sans>is(abs(ans1-(s/n))&lt;=0.01*(s/n))</sans>
     <tans>true</tans>
     <truescore>0</truescore>
     <trueanswernote>prt_ans1-2-T</trueanswernote>
@@ -217,7 +217,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>1</name>
     <answertest>AlgEquiv</answertest>
-    <sans>is(abs(ans3-(xbar-12)/ans1)<=0.02)</sans>
+    <sans>is(abs(ans3-(xbar-12)/ans1)&lt;=0.02)</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans3-2-T</trueanswernote>
     <truefeedback format="html">
@@ -229,7 +229,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
   <node>
     <name>2</name>
     <answertest>AlgEquiv</answertest>
-    <sans>is(abs(ans3-(12-xbar)/ans1)<=0.02)</sans>
+    <sans>is(abs(ans3-(12-xbar)/ans1)&lt;=0.02)</sans>
     <tans>true</tans>
     <truescore>0</truescore>
     <trueanswernote>prt_ans3-3-T</trueanswernote>
