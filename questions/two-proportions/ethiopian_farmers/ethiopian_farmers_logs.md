@@ -73,3 +73,14 @@ Deviations reported: - Plan's STRUCTURE section (non-negotiable) describes decis
 - Plan calls for a two-number input for p̂ pair, odds pair, and CIs; I implemented these as algebraic inputs accepting a Maxima list `[a,b]`, graded with NumRelative (which STACK's numerical tests support for lists per the Numerical Testing note) — this is a reasonable literal reading of "two-number input" not explicitly specified as a distinct STACK input type, so noted here rather than treated as silent.
 ```
 
+## Entry 4 — reviewer-self-fix · attempt 1/3 (2026-07-23T18:33:03)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+```
+

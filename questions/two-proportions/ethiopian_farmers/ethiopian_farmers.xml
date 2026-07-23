@@ -141,7 +141,29 @@ decision2_opts: [
 validity_opts: [
   [1, is(validity_true="valid"), "Valid — all expected cell counts are at least 5"],
   [2, is(validity_true="invalid"), "Invalid — at least one expected cell count is below 5"]
-];]]></text>
+];
+
+/* Test-support variables, used only to build qtest input expressions below. */
+test_wrong_p_small: p_hat_small+0.1;
+test_wrong_p_pool: (test_wrong_p_small*n_s+p_hat_large*n_l)/(n_s+n_l);
+test_wrong_se_pooled: sqrt(test_wrong_p_pool*(1-test_wrong_p_pool)*(1/n_s+1/n_l));
+test_wrong_z: (test_wrong_p_small-p_hat_large)/test_wrong_se_pooled;
+test_wrong_decision_opt: if abs(test_wrong_z)>1.96 then 1 else 2;
+test_wrong_se_unpooled: sqrt(test_wrong_p_small*(1-test_wrong_p_small)/n_s+p_hat_large*(1-p_hat_large)/n_l);
+test_wrong_ci_lower: (test_wrong_p_small-p_hat_large)-1.96*test_wrong_se_unpooled;
+test_wrong_ci_upper: (test_wrong_p_small-p_hat_large)+1.96*test_wrong_se_unpooled;
+
+test_wrong_odds_small: odds_small_true+0.1;
+test_wrong_A: n_s/(1+test_wrong_odds_small);
+test_wrong_B: n_s-test_wrong_A;
+test_wrong_C: n_l/(1+odds_large_true);
+test_wrong_D: n_l-test_wrong_C;
+test_wrong_chisq: (n_s+n_l)*(test_wrong_A*test_wrong_D-test_wrong_B*test_wrong_C)^2/((test_wrong_A+test_wrong_B)*(test_wrong_C+test_wrong_D)*(test_wrong_A+test_wrong_C)*(test_wrong_B+test_wrong_D));
+test_wrong_decision2_opt: if test_wrong_chisq>3.84 then 1 else 2;
+test_wrong_OR: test_wrong_odds_small/odds_large_true;
+test_wrong_se_logOR: sqrt(1/test_wrong_A+1/test_wrong_B+1/test_wrong_C+1/test_wrong_D);
+test_wrong_ci_OR_lower: test_wrong_OR*exp(-1.96*test_wrong_se_logOR);
+test_wrong_ci_OR_upper: test_wrong_OR*exp(1.96*test_wrong_se_logOR);]]></text>
 </questionvariables>
 <generalfeedback format="html">
 <text><![CDATA[<p>The observed table was:</p>
@@ -247,8 +269,8 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans1a</sans>
+    <tans>1</tans>
     <trueanswernote>prt_ans1a-1-T</trueanswernote>
     <falseanswernote>prt_ans1a-1-F</falseanswernote>
   </node>
@@ -259,10 +281,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[if not(listp(ans1b) and length(ans1b)=2) then false else is(abs(float(ans1b[1])-p_hat_small)<0.001 and abs(float(ans1b[2])-p_hat_large)<0.001)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1b-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct — this matches the sample proportions of non-adopters computed from the table.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans1b-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct. Recompute \(\hat p_{\text{small}}\) and \(\hat p_{\text{large}}\) as (non-adopters)/(row total) in each group.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -271,10 +299,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([spv, sps, spl, ppool, sepool, zsa], spv: listp(ans1b) and length(ans1b)=2, sps: if spv then float(ans1b[1]) else p_hat_small, spl: if spv then float(ans1b[2]) else p_hat_large, ppool: (sps*n_s+spl*n_l)/(n_s+n_l), sepool: sqrt(ppool*(1-ppool)*(1/n_s+1/n_l)), zsa: if sepool=0 then 0 else (sps-spl)/sepool, is(numberp(ans1c) and abs(ans1c-zsa)<0.01))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1c-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct, using the pooled standard error and your own \(\hat p\) pair from part (b) (not necessarily the table's true values).</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans1c-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct. Recompute \(z\) using the pooled standard error and your own \(\hat p\) pair from part (b).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -283,10 +317,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([dsa, optsa], dsa: if not numberp(ans1c) then "undetermined" elseif abs(ans1c)>1.96 then "reject" else "fail to reject", optsa: if dsa="reject" then 1 elseif dsa="fail to reject" then 2 else -1, is(ans1d=optsa))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1d-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct — this is the right conclusion given your own \(z\)-statistic from part (c).</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans1d-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct given your own \(z\)-statistic from part (c): compare \(|z|\) to 1.96.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -295,10 +335,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([spv, sps, spl, seunp, diffsa, cilo, ciup], spv: listp(ans1b) and length(ans1b)=2, sps: if spv then float(ans1b[1]) else p_hat_small, spl: if spv then float(ans1b[2]) else p_hat_large, seunp: sqrt(sps*(1-sps)/n_s+spl*(1-spl)/n_l), diffsa: sps-spl, cilo: diffsa-1.96*seunp, ciup: diffsa+1.96*seunp, if not(listp(ans1e) and length(ans1e)=2) then false else is(abs(float(ans1e[1])-cilo)<0.01 and abs(float(ans1e[2])-ciup)<0.01))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1e-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct, using the unpooled standard error and your own \(\hat p\) pair from part (b).</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans1e-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct. Recompute the CI using the unpooled standard error and your own \(\hat p\) pair from part (b).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -307,8 +353,8 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <sans>ans2a</sans>
+    <tans>1</tans>
     <trueanswernote>prt_ans2a-1-T</trueanswernote>
     <falseanswernote>prt_ans2a-1-F</falseanswernote>
   </node>
@@ -319,10 +365,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[if not(listp(ans2b) and length(ans2b)=2) then false else is(abs(float(ans2b[1])-odds_small_true)<0.01 and abs(float(ans2b[2])-odds_large_true)<0.01)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans2b-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct — these are the odds of non-adoption in each group.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans2b-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct. Odds of non-adoption = non-adopters \(\div\) adopters, in each group.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -331,10 +383,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([osv, osa, ola, Asa, Bsa, Csa, Dsa, chisa], osv: listp(ans2b) and length(ans2b)=2, osa: if osv then float(ans2b[1]) else odds_small_true, ola: if osv then float(ans2b[2]) else odds_large_true, Asa: n_s/(1+osa), Bsa: n_s-Asa, Csa: n_l/(1+ola), Dsa: n_l-Csa, chisa: if (Asa+Bsa)*(Csa+Dsa)*(Asa+Csa)*(Bsa+Dsa)=0 then 0 else (n_s+n_l)*(Asa*Dsa-Bsa*Csa)^2/((Asa+Bsa)*(Csa+Dsa)*(Asa+Csa)*(Bsa+Dsa)), is(numberp(ans2c) and abs(ans2c-chisa)<0.05))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans2c-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct, recomputed from your own odds pair from part (b).</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans2c-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct given your own odds pair from part (b): rebuild the implied 2x2 table from those odds and each group's row total, then recompute \(\chi^2\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -343,10 +401,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([dsa, optsa], dsa: if not numberp(ans2c) then "undetermined" elseif ans2c>3.84 then "reject" else "fail to reject", optsa: if dsa="reject" then 1 elseif dsa="fail to reject" then 2 else -1, is(ans2d=optsa))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans2d-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct — this is the right conclusion given your own \(\chi^2\)-statistic from part (c).</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans2d-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct given your own \(\chi^2\)-statistic from part (c): compare it to 3.84.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -355,10 +419,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([osv, osa, ola, Asa, Bsa, Csa, Dsa, ORsa, selog, cilo, ciup], osv: listp(ans2b) and length(ans2b)=2, osa: if osv then float(ans2b[1]) else odds_small_true, ola: if osv then float(ans2b[2]) else odds_large_true, Asa: n_s/(1+osa), Bsa: n_s-Asa, Csa: n_l/(1+ola), Dsa: n_l-Csa, ORsa: if ola=0 then 0 else osa/ola, selog: if Asa<=0 or Bsa<=0 or Csa<=0 or Dsa<=0 then 0 else sqrt(1/Asa+1/Bsa+1/Csa+1/Dsa), cilo: ORsa*exp(-1.96*selog), ciup: ORsa*exp(1.96*selog), if not(listp(ans2e) and length(ans2e)=2) then false else is(abs(float(ans2e[1])-cilo)<0.05 and abs(float(ans2e[2])-ciup)<0.05))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans2e-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct, using your own odds pair from part (b).</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans2e-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct. Recompute the CI for the odds ratio using your own odds pair from part (b).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -367,10 +437,16 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[is(numberp(ans3a) and abs(ans3a-min_expected_true)<0.01)]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans3a-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct — this is the smallest expected cell count in the table.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans3a-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct. Expected count for a cell = (row total \(\times\) column total)/grand total; find the smallest across all four cells.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -379,17 +455,24 @@ validity_opts: [
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans><![CDATA[block([vsa, optsa], vsa: if not numberp(ans3a) then "undetermined" elseif ans3a>=5 then "valid" else "invalid", optsa: if vsa="valid" then 1 elseif vsa="invalid" then 2 else -1, is(ans3b=optsa))]]></sans>
     <tans>true</tans>
     <trueanswernote>prt_ans3b-1-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>Correct given your own answer to part (a): compare it to the threshold of 5.</p>]]></text>
+    </truefeedback>
     <falseanswernote>prt_ans3b-1-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct given your own answer to part (a): compare it to the threshold of 5.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 <qtest>
   <testcase>1</testcase>
+  <description>Fully correct answers (both regimes)</description>
   <testinput>
     <name>ans1a</name>
-    <value>ta_mcq1a</value>
+    <value>1</value>
   </testinput>
   <testinput>
     <name>ans1b</name>
@@ -401,7 +484,7 @@ validity_opts: [
   </testinput>
   <testinput>
     <name>ans1d</name>
-    <value>decision1_opts</value>
+    <value>first(mcq_correct(decision1_opts))</value>
   </testinput>
   <testinput>
     <name>ans1e</name>
@@ -409,7 +492,7 @@ validity_opts: [
   </testinput>
   <testinput>
     <name>ans2a</name>
-    <value>ta_mcq2a</value>
+    <value>1</value>
   </testinput>
   <testinput>
     <name>ans2b</name>
@@ -421,7 +504,7 @@ validity_opts: [
   </testinput>
   <testinput>
     <name>ans2d</name>
-    <value>decision2_opts</value>
+    <value>first(mcq_correct(decision2_opts))</value>
   </testinput>
   <testinput>
     <name>ans2e</name>
@@ -433,7 +516,7 @@ validity_opts: [
   </testinput>
   <testinput>
     <name>ans3b</name>
-    <value>validity_opts</value>
+    <value>first(mcq_correct(validity_opts))</value>
   </testinput>
   <expected>
     <name>prt_ans1a</name>
@@ -500,6 +583,421 @@ validity_opts: [
     <expectedscore>1.0000000</expectedscore>
     <expectedpenalty>0.0000000</expectedpenalty>
     <expectedanswernote>prt_ans3a-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3b</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3b-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>2</testcase>
+  <description>Wrong MCQ definitions (ans1a, ans2a), everything else correct</description>
+  <testinput>
+    <name>ans1a</name>
+    <value>2</value>
+  </testinput>
+  <testinput>
+    <name>ans1b</name>
+    <value>[p_hat_small, p_hat_large]</value>
+  </testinput>
+  <testinput>
+    <name>ans1c</name>
+    <value>z_true</value>
+  </testinput>
+  <testinput>
+    <name>ans1d</name>
+    <value>first(mcq_correct(decision1_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans1e</name>
+    <value>[ci_diff_lower, ci_diff_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>3</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>[odds_small_true, odds_large_true]</value>
+  </testinput>
+  <testinput>
+    <name>ans2c</name>
+    <value>chisq_true</value>
+  </testinput>
+  <testinput>
+    <name>ans2d</name>
+    <value>first(mcq_correct(decision2_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans2e</name>
+    <value>[ci_OR_lower, ci_OR_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans3a</name>
+    <value>min_expected_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3b</name>
+    <value>first(mcq_correct(validity_opts))</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1a</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1a-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2a</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans2a-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1b</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1b-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1c</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1c-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1d</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1d-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1e</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1e-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2b</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2b-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2c</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2c-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2d</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2d-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2e</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2e-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3a</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3a-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3b</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3b-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>3</testcase>
+  <description>Thread 1 wrong-but-consistent follow-through (wrong p-hat pair, correctly propagated)</description>
+  <testinput>
+    <name>ans1a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans1b</name>
+    <value>[test_wrong_p_small, p_hat_large]</value>
+  </testinput>
+  <testinput>
+    <name>ans1c</name>
+    <value>test_wrong_z</value>
+  </testinput>
+  <testinput>
+    <name>ans1d</name>
+    <value>test_wrong_decision_opt</value>
+  </testinput>
+  <testinput>
+    <name>ans1e</name>
+    <value>[test_wrong_ci_lower, test_wrong_ci_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>[odds_small_true, odds_large_true]</value>
+  </testinput>
+  <testinput>
+    <name>ans2c</name>
+    <value>chisq_true</value>
+  </testinput>
+  <testinput>
+    <name>ans2d</name>
+    <value>first(mcq_correct(decision2_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans2e</name>
+    <value>[ci_OR_lower, ci_OR_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans3a</name>
+    <value>min_expected_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3b</name>
+    <value>first(mcq_correct(validity_opts))</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1b</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1b-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1c</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1c-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1d</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1d-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1e</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1e-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>4</testcase>
+  <description>Thread 2 wrong-but-consistent follow-through (wrong odds pair, correctly propagated)</description>
+  <testinput>
+    <name>ans1a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans1b</name>
+    <value>[p_hat_small, p_hat_large]</value>
+  </testinput>
+  <testinput>
+    <name>ans1c</name>
+    <value>z_true</value>
+  </testinput>
+  <testinput>
+    <name>ans1d</name>
+    <value>first(mcq_correct(decision1_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans1e</name>
+    <value>[ci_diff_lower, ci_diff_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>[test_wrong_odds_small, odds_large_true]</value>
+  </testinput>
+  <testinput>
+    <name>ans2c</name>
+    <value>test_wrong_chisq</value>
+  </testinput>
+  <testinput>
+    <name>ans2d</name>
+    <value>test_wrong_decision2_opt</value>
+  </testinput>
+  <testinput>
+    <name>ans2e</name>
+    <value>[test_wrong_ci_OR_lower, test_wrong_ci_OR_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans3a</name>
+    <value>min_expected_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3b</name>
+    <value>first(mcq_correct(validity_opts))</value>
+  </testinput>
+  <expected>
+    <name>prt_ans2b</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans2b-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2c</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2c-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2d</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2d-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2e</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2e-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>5</testcase>
+  <description>Adversarial edge case - ans1b submitted as an empty list; guard should fall back to true values downstream</description>
+  <testinput>
+    <name>ans1a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans1b</name>
+    <value>[]</value>
+  </testinput>
+  <testinput>
+    <name>ans1c</name>
+    <value>z_true</value>
+  </testinput>
+  <testinput>
+    <name>ans1d</name>
+    <value>first(mcq_correct(decision1_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans1e</name>
+    <value>[ci_diff_lower, ci_diff_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>[odds_small_true, odds_large_true]</value>
+  </testinput>
+  <testinput>
+    <name>ans2c</name>
+    <value>chisq_true</value>
+  </testinput>
+  <testinput>
+    <name>ans2d</name>
+    <value>first(mcq_correct(decision2_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans2e</name>
+    <value>[ci_OR_lower, ci_OR_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans3a</name>
+    <value>min_expected_true</value>
+  </testinput>
+  <testinput>
+    <name>ans3b</name>
+    <value>first(mcq_correct(validity_opts))</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1b</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1b-1-F</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1c</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1c-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans1e</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1e-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>6</testcase>
+  <description>Validity wrong-but-consistent follow-through (wrong expected-count value, correctly compared to threshold)</description>
+  <testinput>
+    <name>ans1a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans1b</name>
+    <value>[p_hat_small, p_hat_large]</value>
+  </testinput>
+  <testinput>
+    <name>ans1c</name>
+    <value>z_true</value>
+  </testinput>
+  <testinput>
+    <name>ans1d</name>
+    <value>first(mcq_correct(decision1_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans1e</name>
+    <value>[ci_diff_lower, ci_diff_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans2a</name>
+    <value>1</value>
+  </testinput>
+  <testinput>
+    <name>ans2b</name>
+    <value>[odds_small_true, odds_large_true]</value>
+  </testinput>
+  <testinput>
+    <name>ans2c</name>
+    <value>chisq_true</value>
+  </testinput>
+  <testinput>
+    <name>ans2d</name>
+    <value>first(mcq_correct(decision2_opts))</value>
+  </testinput>
+  <testinput>
+    <name>ans2e</name>
+    <value>[ci_OR_lower, ci_OR_upper]</value>
+  </testinput>
+  <testinput>
+    <name>ans3a</name>
+    <value>min_expected_true+7</value>
+  </testinput>
+  <testinput>
+    <name>ans3b</name>
+    <value><![CDATA[if min_expected_true+7>=5 then 1 else 2]]></value>
+  </testinput>
+  <expected>
+    <name>prt_ans3a</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans3a-1-F</expectedanswernote>
   </expected>
   <expected>
     <name>prt_ans3b</name>

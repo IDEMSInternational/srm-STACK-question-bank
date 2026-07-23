@@ -137,6 +137,28 @@ validity_opts: [
   [2, is(validity_true="invalid"), "Invalid — at least one expected cell count is below 5"]
 ];
 
+/* Test-support variables, used only to build qtest input expressions below. */
+test_wrong_p_small: p_hat_small+0.1;
+test_wrong_p_pool: (test_wrong_p_small*n_s+p_hat_large*n_l)/(n_s+n_l);
+test_wrong_se_pooled: sqrt(test_wrong_p_pool*(1-test_wrong_p_pool)*(1/n_s+1/n_l));
+test_wrong_z: (test_wrong_p_small-p_hat_large)/test_wrong_se_pooled;
+test_wrong_decision_opt: if abs(test_wrong_z)>1.96 then 1 else 2;
+test_wrong_se_unpooled: sqrt(test_wrong_p_small*(1-test_wrong_p_small)/n_s+p_hat_large*(1-p_hat_large)/n_l);
+test_wrong_ci_lower: (test_wrong_p_small-p_hat_large)-1.96*test_wrong_se_unpooled;
+test_wrong_ci_upper: (test_wrong_p_small-p_hat_large)+1.96*test_wrong_se_unpooled;
+
+test_wrong_odds_small: odds_small_true+0.1;
+test_wrong_A: n_s/(1+test_wrong_odds_small);
+test_wrong_B: n_s-test_wrong_A;
+test_wrong_C: n_l/(1+odds_large_true);
+test_wrong_D: n_l-test_wrong_C;
+test_wrong_chisq: (n_s+n_l)*(test_wrong_A*test_wrong_D-test_wrong_B*test_wrong_C)^2/((test_wrong_A+test_wrong_B)*(test_wrong_C+test_wrong_D)*(test_wrong_A+test_wrong_C)*(test_wrong_B+test_wrong_D));
+test_wrong_decision2_opt: if test_wrong_chisq>3.84 then 1 else 2;
+test_wrong_OR: test_wrong_odds_small/odds_large_true;
+test_wrong_se_logOR: sqrt(1/test_wrong_A+1/test_wrong_B+1/test_wrong_C+1/test_wrong_D);
+test_wrong_ci_OR_lower: test_wrong_OR*exp(-1.96*test_wrong_se_logOR);
+test_wrong_ci_OR_upper: test_wrong_OR*exp(1.96*test_wrong_se_logOR);
+
 GENERALFEEDBACK:
 <p>The observed table was:</p>
 <table border="1" cellpadding="6" style="border-collapse:collapse; text-align:center;">
@@ -231,77 +253,98 @@ SHOWVALIDATION: 0
 
 PRT prt_ans1a:
 NODE 0:
-SANS: true
-TANS: true
+SANS: ans1a
+TANS: 1
 
 PRT prt_ans1b:
 NODE 0:
-SANS: true
+SANS: if not(listp(ans1b) and length(ans1b)=2) then false else is(abs(float(ans1b[1])-p_hat_small)<0.001 and abs(float(ans1b[2])-p_hat_large)<0.001)
 TANS: true
+TRUEFEEDBACK: <p>Correct — this matches the sample proportions of non-adopters computed from the table.</p>
+FALSEFEEDBACK: <p>Not correct. Recompute \(\hat p_{\text{small}}\) and \(\hat p_{\text{large}}\) as (non-adopters)/(row total) in each group.</p>
 
 PRT prt_ans1c:
 NODE 0:
-SANS: true
+SANS: block([spv, sps, spl, ppool, sepool, zsa], spv: listp(ans1b) and length(ans1b)=2, sps: if spv then float(ans1b[1]) else p_hat_small, spl: if spv then float(ans1b[2]) else p_hat_large, ppool: (sps*n_s+spl*n_l)/(n_s+n_l), sepool: sqrt(ppool*(1-ppool)*(1/n_s+1/n_l)), zsa: if sepool=0 then 0 else (sps-spl)/sepool, is(numberp(ans1c) and abs(ans1c-zsa)<0.01))
 TANS: true
+TRUEFEEDBACK: <p>Correct, using the pooled standard error and your own \(\hat p\) pair from part (b) (not necessarily the table's true values).</p>
+FALSEFEEDBACK: <p>Not correct. Recompute \(z\) using the pooled standard error and your own \(\hat p\) pair from part (b).</p>
 
 PRT prt_ans1d:
 NODE 0:
-SANS: true
+SANS: block([dsa, optsa], dsa: if not numberp(ans1c) then "undetermined" elseif abs(ans1c)>1.96 then "reject" else "fail to reject", optsa: if dsa="reject" then 1 elseif dsa="fail to reject" then 2 else -1, is(ans1d=optsa))
 TANS: true
+TRUEFEEDBACK: <p>Correct — this is the right conclusion given your own \(z\)-statistic from part (c).</p>
+FALSEFEEDBACK: <p>Not correct given your own \(z\)-statistic from part (c): compare \(|z|\) to 1.96.</p>
 
 PRT prt_ans1e:
 NODE 0:
-SANS: true
+SANS: block([spv, sps, spl, seunp, diffsa, cilo, ciup], spv: listp(ans1b) and length(ans1b)=2, sps: if spv then float(ans1b[1]) else p_hat_small, spl: if spv then float(ans1b[2]) else p_hat_large, seunp: sqrt(sps*(1-sps)/n_s+spl*(1-spl)/n_l), diffsa: sps-spl, cilo: diffsa-1.96*seunp, ciup: diffsa+1.96*seunp, if not(listp(ans1e) and length(ans1e)=2) then false else is(abs(float(ans1e[1])-cilo)<0.01 and abs(float(ans1e[2])-ciup)<0.01))
 TANS: true
+TRUEFEEDBACK: <p>Correct, using the unpooled standard error and your own \(\hat p\) pair from part (b).</p>
+FALSEFEEDBACK: <p>Not correct. Recompute the CI using the unpooled standard error and your own \(\hat p\) pair from part (b).</p>
 
 PRT prt_ans2a:
 NODE 0:
-SANS: true
-TANS: true
+SANS: ans2a
+TANS: 1
 
 PRT prt_ans2b:
 NODE 0:
-SANS: true
+SANS: if not(listp(ans2b) and length(ans2b)=2) then false else is(abs(float(ans2b[1])-odds_small_true)<0.01 and abs(float(ans2b[2])-odds_large_true)<0.01)
 TANS: true
+TRUEFEEDBACK: <p>Correct — these are the odds of non-adoption in each group.</p>
+FALSEFEEDBACK: <p>Not correct. Odds of non-adoption = non-adopters \(\div\) adopters, in each group.</p>
 
 PRT prt_ans2c:
 NODE 0:
-SANS: true
+SANS: block([osv, osa, ola, Asa, Bsa, Csa, Dsa, chisa], osv: listp(ans2b) and length(ans2b)=2, osa: if osv then float(ans2b[1]) else odds_small_true, ola: if osv then float(ans2b[2]) else odds_large_true, Asa: n_s/(1+osa), Bsa: n_s-Asa, Csa: n_l/(1+ola), Dsa: n_l-Csa, chisa: if (Asa+Bsa)*(Csa+Dsa)*(Asa+Csa)*(Bsa+Dsa)=0 then 0 else (n_s+n_l)*(Asa*Dsa-Bsa*Csa)^2/((Asa+Bsa)*(Csa+Dsa)*(Asa+Csa)*(Bsa+Dsa)), is(numberp(ans2c) and abs(ans2c-chisa)<0.05))
 TANS: true
+TRUEFEEDBACK: <p>Correct, recomputed from your own odds pair from part (b).</p>
+FALSEFEEDBACK: <p>Not correct given your own odds pair from part (b): rebuild the implied 2x2 table from those odds and each group's row total, then recompute \(\chi^2\).</p>
 
 PRT prt_ans2d:
 NODE 0:
-SANS: true
+SANS: block([dsa, optsa], dsa: if not numberp(ans2c) then "undetermined" elseif ans2c>3.84 then "reject" else "fail to reject", optsa: if dsa="reject" then 1 elseif dsa="fail to reject" then 2 else -1, is(ans2d=optsa))
 TANS: true
+TRUEFEEDBACK: <p>Correct — this is the right conclusion given your own \(\chi^2\)-statistic from part (c).</p>
+FALSEFEEDBACK: <p>Not correct given your own \(\chi^2\)-statistic from part (c): compare it to 3.84.</p>
 
 PRT prt_ans2e:
 NODE 0:
-SANS: true
+SANS: block([osv, osa, ola, Asa, Bsa, Csa, Dsa, ORsa, selog, cilo, ciup], osv: listp(ans2b) and length(ans2b)=2, osa: if osv then float(ans2b[1]) else odds_small_true, ola: if osv then float(ans2b[2]) else odds_large_true, Asa: n_s/(1+osa), Bsa: n_s-Asa, Csa: n_l/(1+ola), Dsa: n_l-Csa, ORsa: if ola=0 then 0 else osa/ola, selog: if Asa<=0 or Bsa<=0 or Csa<=0 or Dsa<=0 then 0 else sqrt(1/Asa+1/Bsa+1/Csa+1/Dsa), cilo: ORsa*exp(-1.96*selog), ciup: ORsa*exp(1.96*selog), if not(listp(ans2e) and length(ans2e)=2) then false else is(abs(float(ans2e[1])-cilo)<0.05 and abs(float(ans2e[2])-ciup)<0.05))
 TANS: true
+TRUEFEEDBACK: <p>Correct, using your own odds pair from part (b).</p>
+FALSEFEEDBACK: <p>Not correct. Recompute the CI for the odds ratio using your own odds pair from part (b).</p>
 
 PRT prt_ans3a:
 NODE 0:
-SANS: true
+SANS: is(numberp(ans3a) and abs(ans3a-min_expected_true)<0.01)
 TANS: true
+TRUEFEEDBACK: <p>Correct — this is the smallest expected cell count in the table.</p>
+FALSEFEEDBACK: <p>Not correct. Expected count for a cell = (row total \(\times\) column total)/grand total; find the smallest across all four cells.</p>
 
 PRT prt_ans3b:
 NODE 0:
-SANS: true
+SANS: block([vsa, optsa], vsa: if not numberp(ans3a) then "undetermined" elseif ans3a>=5 then "valid" else "invalid", optsa: if vsa="valid" then 1 elseif vsa="invalid" then 2 else -1, is(ans3b=optsa))
 TANS: true
+TRUEFEEDBACK: <p>Correct given your own answer to part (a): compare it to the threshold of 5.</p>
+FALSEFEEDBACK: <p>Not correct given your own answer to part (a): compare it to the threshold of 5.</p>
 
 QTEST 1:
-INPUT ans1a: ta_mcq1a
+DESCRIPTION: Fully correct answers (both regimes)
+INPUT ans1a: 1
 INPUT ans1b: [p_hat_small, p_hat_large]
 INPUT ans1c: z_true
-INPUT ans1d: decision1_opts
+INPUT ans1d: first(mcq_correct(decision1_opts))
 INPUT ans1e: [ci_diff_lower, ci_diff_upper]
-INPUT ans2a: ta_mcq2a
+INPUT ans2a: 1
 INPUT ans2b: [odds_small_true, odds_large_true]
 INPUT ans2c: chisq_true
-INPUT ans2d: decision2_opts
+INPUT ans2d: first(mcq_correct(decision2_opts))
 INPUT ans2e: [ci_OR_lower, ci_OR_upper]
 INPUT ans3a: min_expected_true
-INPUT ans3b: validity_opts
+INPUT ans3b: first(mcq_correct(validity_opts))
 EXPECT prt_ans1a: NODE0-T
 EXPECT prt_ans1b: NODE0-T
 EXPECT prt_ans1c: NODE0-T
@@ -313,4 +356,104 @@ EXPECT prt_ans2c: NODE0-T
 EXPECT prt_ans2d: NODE0-T
 EXPECT prt_ans2e: NODE0-T
 EXPECT prt_ans3a: NODE0-T
+EXPECT prt_ans3b: NODE0-T
+
+QTEST 2:
+DESCRIPTION: Wrong MCQ definitions (ans1a, ans2a), everything else correct
+INPUT ans1a: 2
+INPUT ans1b: [p_hat_small, p_hat_large]
+INPUT ans1c: z_true
+INPUT ans1d: first(mcq_correct(decision1_opts))
+INPUT ans1e: [ci_diff_lower, ci_diff_upper]
+INPUT ans2a: 3
+INPUT ans2b: [odds_small_true, odds_large_true]
+INPUT ans2c: chisq_true
+INPUT ans2d: first(mcq_correct(decision2_opts))
+INPUT ans2e: [ci_OR_lower, ci_OR_upper]
+INPUT ans3a: min_expected_true
+INPUT ans3b: first(mcq_correct(validity_opts))
+EXPECT prt_ans1a: NODE0-F
+EXPECT prt_ans2a: NODE0-F
+EXPECT prt_ans1b: NODE0-T
+EXPECT prt_ans1c: NODE0-T
+EXPECT prt_ans1d: NODE0-T
+EXPECT prt_ans1e: NODE0-T
+EXPECT prt_ans2b: NODE0-T
+EXPECT prt_ans2c: NODE0-T
+EXPECT prt_ans2d: NODE0-T
+EXPECT prt_ans2e: NODE0-T
+EXPECT prt_ans3a: NODE0-T
+EXPECT prt_ans3b: NODE0-T
+
+QTEST 3:
+DESCRIPTION: Thread 1 wrong-but-consistent follow-through (wrong p-hat pair, correctly propagated)
+INPUT ans1a: 1
+INPUT ans1b: [test_wrong_p_small, p_hat_large]
+INPUT ans1c: test_wrong_z
+INPUT ans1d: test_wrong_decision_opt
+INPUT ans1e: [test_wrong_ci_lower, test_wrong_ci_upper]
+INPUT ans2a: 1
+INPUT ans2b: [odds_small_true, odds_large_true]
+INPUT ans2c: chisq_true
+INPUT ans2d: first(mcq_correct(decision2_opts))
+INPUT ans2e: [ci_OR_lower, ci_OR_upper]
+INPUT ans3a: min_expected_true
+INPUT ans3b: first(mcq_correct(validity_opts))
+EXPECT prt_ans1b: NODE0-F
+EXPECT prt_ans1c: NODE0-T
+EXPECT prt_ans1d: NODE0-T
+EXPECT prt_ans1e: NODE0-T
+
+QTEST 4:
+DESCRIPTION: Thread 2 wrong-but-consistent follow-through (wrong odds pair, correctly propagated)
+INPUT ans1a: 1
+INPUT ans1b: [p_hat_small, p_hat_large]
+INPUT ans1c: z_true
+INPUT ans1d: first(mcq_correct(decision1_opts))
+INPUT ans1e: [ci_diff_lower, ci_diff_upper]
+INPUT ans2a: 1
+INPUT ans2b: [test_wrong_odds_small, odds_large_true]
+INPUT ans2c: test_wrong_chisq
+INPUT ans2d: test_wrong_decision2_opt
+INPUT ans2e: [test_wrong_ci_OR_lower, test_wrong_ci_OR_upper]
+INPUT ans3a: min_expected_true
+INPUT ans3b: first(mcq_correct(validity_opts))
+EXPECT prt_ans2b: NODE0-F
+EXPECT prt_ans2c: NODE0-T
+EXPECT prt_ans2d: NODE0-T
+EXPECT prt_ans2e: NODE0-T
+
+QTEST 5:
+DESCRIPTION: Adversarial edge case - ans1b submitted as an empty list; guard should fall back to true values downstream
+INPUT ans1a: 1
+INPUT ans1b: []
+INPUT ans1c: z_true
+INPUT ans1d: first(mcq_correct(decision1_opts))
+INPUT ans1e: [ci_diff_lower, ci_diff_upper]
+INPUT ans2a: 1
+INPUT ans2b: [odds_small_true, odds_large_true]
+INPUT ans2c: chisq_true
+INPUT ans2d: first(mcq_correct(decision2_opts))
+INPUT ans2e: [ci_OR_lower, ci_OR_upper]
+INPUT ans3a: min_expected_true
+INPUT ans3b: first(mcq_correct(validity_opts))
+EXPECT prt_ans1b: NODE0-F
+EXPECT prt_ans1c: NODE0-T
+EXPECT prt_ans1e: NODE0-T
+
+QTEST 6:
+DESCRIPTION: Validity wrong-but-consistent follow-through (wrong expected-count value, correctly compared to threshold)
+INPUT ans1a: 1
+INPUT ans1b: [p_hat_small, p_hat_large]
+INPUT ans1c: z_true
+INPUT ans1d: first(mcq_correct(decision1_opts))
+INPUT ans1e: [ci_diff_lower, ci_diff_upper]
+INPUT ans2a: 1
+INPUT ans2b: [odds_small_true, odds_large_true]
+INPUT ans2c: chisq_true
+INPUT ans2d: first(mcq_correct(decision2_opts))
+INPUT ans2e: [ci_OR_lower, ci_OR_upper]
+INPUT ans3a: min_expected_true+7
+INPUT ans3b: if min_expected_true+7>=5 then 1 else 2
+EXPECT prt_ans3a: NODE0-F
 EXPECT prt_ans3b: NODE0-T
