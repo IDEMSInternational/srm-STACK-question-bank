@@ -31,3 +31,14 @@ Render failed: apply: found fpprintprec evaluates to 12 where a function was exp
 The field ""Question variables"" generated the following error: apply: found fpprintprec evaluates to 12 where a function was expected.
 ```
 
+## Entry 3 — author · attempt 2/3 (2026-07-23T16:32:55)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: FAILED
+
+Render failed: Error rendering input: The model answer field for this input is malformed: <code>"\\neq 12"</code>. ,The teacher did not indicate at least one correct answer.
+```
+

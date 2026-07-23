@@ -38,7 +38,6 @@ tmag: if bucket=1 then 3.2+0.1*rand(11) else
 t_val: -tmag;
 SE_exact: s/sqrt(n);
 xbar_exact: mu0 + t_val*SE_exact;
-xbar: float(fpprintprec(6,xbar_exact));
 xbar: 0.001*round(xbar_exact*1000);
 SE: 0.0001*round(SE_exact*10000);
 t_display: 0.01*round(t_val*100);
