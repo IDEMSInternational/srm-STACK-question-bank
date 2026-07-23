@@ -228,3 +228,23 @@ NOTED_FOR_PLANNER:
 [Self-fix could not be verified against the STACK API.]
 ```
 
+## Entry 15 — planner · review (2026-07-23T17:13:11)
+
+**Reference files fetched:**
+- (none)
+
+```text
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: The build keeps failing with the exact same XML parse error across three self-fix attempts and two full reviewer rounds: "Not well-formed XML: not well-formed (invalid token): line 155, column 31." The root cause is unescaped `<=`/`<` characters used as literal content inside `<sans>` tags, e.g.:
+- `<sans>is(abs(ans1-se_true)<=0.01*se_true)</sans>`
+- `<sans>is(abs(ans1-(s/n))<=0.01*(s/n))</sans>`
+- `<sans>is(abs(ans3-(xbar-12)/ans1)<=0.02)</sans>`
+- `<sans>is(abs(ans3-(12-xbar)/ans1)<=0.02)</sans>`
+
+These are not wrapped in `<![CDATA[ ... ]]>` and not entity-escaped, so the literal `<` breaks the XML parser. Whatever auto-CDATA-wrapping was assumed to be in place for "any field containing `<`, `>`, or `&`" is evidently not actually being applied to `<sans>` content specifically (unlike `<feedbackvariables>`/`<text>` blocks, which do appear to escape fine). Please explicitly wrap every `<sans>` (and `<tans>`, if any contain comparison operators) field with `<![CDATA[...]]>` directly in the serialized XML — do not rely on an assumed automatic wrapping step for this tag. This is a pure XML-serialization fix; no change to question content, PRT logic, randomization, or feedback wording is needed. Keep Author disabled — this is entirely Reviewer's own PRT/qtest serialization to correct.
+AGENT_SETTINGS_CHANGE: author=off
+```
+
