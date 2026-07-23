@@ -61,9 +61,23 @@ ta_se: se;
 ta_h0: mu=12;
 ta_h1: mu#12;
 ta_t: t_display;
-ta_bucket: bucket_label;
-ta_decision: decision_label;
-ta_validity: "Yes";
+
+/* MCQ model-answer lists: [[value, correct, display], ...] */
+bucket_options: [[1, is(bucket=1), "P > 0.32"],
+                 [2, is(bucket=2), "0.05 < P < 0.32"],
+                 [3, is(bucket=3), "0.003 < P < 0.05"],
+                 [4, is(bucket=4), "P < 0.003"]];
+decision_options: [[decrej, is(decision_label="Reject H0"), "Reject H0"],
+                    [decfail, is(decision_label="Fail to reject H0"), "Fail to reject H0"]];
+validity_options: [[validyes, true, "Yes"],
+                    [validno, false, "No"]];
+
+ta_bucket: bucket_options;
+tac_bucket: bucket;
+ta_decision: decision_options;
+tac_decision: if bucket>=3 then decrej else decfail;
+ta_validity: validity_options;
+tac_validity: validyes;
 
 GENERALFEEDBACK:
 <p><strong>Worked solution</strong></p>
@@ -102,19 +116,19 @@ ANSWERTEST: NumAbsolute
 INPUT ans_bucket:
 TYPE: dropdown
 TANS: ta_bucket
-ANSWERTEST: String
+ANSWERTEST: CasEqual
 SHOWVALIDATION: 0
 
 INPUT ans_decision:
 TYPE: radio
 TANS: ta_decision
-ANSWERTEST: String
+ANSWERTEST: CasEqual
 SHOWVALIDATION: 0
 
 INPUT ans_validity:
 TYPE: radio
 TANS: ta_validity
-ANSWERTEST: String
+ANSWERTEST: CasEqual
 SHOWVALIDATION: 0
 
 PRT prt_ans_se:
