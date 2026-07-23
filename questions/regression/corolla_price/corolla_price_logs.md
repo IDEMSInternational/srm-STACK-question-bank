@@ -71,3 +71,17 @@ STACK API check: FAILED
 Render failed: Error(s) in question-variables: Forbidden function: <span class="stacksyntaxexample">load</span>.
 ```
 
+## Entry 4 — author · attempt 2/3 (2026-07-23T18:18:13)
+
+**Reference files fetched:**
+- (none)
+
+**Already available (fetched earlier this session, not re-fetched):**
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
+
+```text
+STACK API check: FAILED
+
+Render failed: Error rendering input: The teacher did not indicate at least one correct answer.
+```
+

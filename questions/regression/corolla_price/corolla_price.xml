@@ -29,8 +29,7 @@ SE(\(b_1\)) \(= {@se_b1@}\)<br/>
 <p>Upper bound: [[input:ans_ci_upper]] [[validation:ans_ci_upper]] [[feedback:prt_ans_ci_upper]]</p>]]></text>
 </questiontext>
 <questionvariables>
-<text><![CDATA[load(distrib);
-n: 38;
+<text><![CDATA[n: 38;
 df: 36;
 b1: float(-(rand(10)+5)/10);
 tcase: rand(3);
