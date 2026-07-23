@@ -236,7 +236,7 @@ QTEST 3:
 DESCRIPTION: Correct t-score but wrong bucket chosen in Part 4
 INPUT ans1: se_true
 INPUT ans3: t_true
-INPUT ans4: mod(bucket_true,4)+1
+INPUT ans4: ev(mod(bucket_true,4)+1,simp)
 EXPECT prt_ans3: NODE1-T
 EXPECT prt_ans4: NODE0-F
 
@@ -244,8 +244,8 @@ QTEST 4:
 DESCRIPTION: Wrong bucket in Part 4, but Part 5 decision follows through from that wrong bucket (not the true one)
 INPUT ans1: se_true
 INPUT ans3: t_true
-INPUT ans4: mod(bucket_true,4)+1
-INPUT ans5: if (mod(bucket_true,4)+1)=1 or (mod(bucket_true,4)+1)=2 then 1 else 2
+INPUT ans4: ev(mod(bucket_true,4)+1,simp)
+INPUT ans5: ev(if (mod(bucket_true,4)+1)=1 or (mod(bucket_true,4)+1)=2 then 1 else 2,simp)
 EXPECT prt_ans4: NODE0-F
 EXPECT prt_ans5: NODE0-T
 

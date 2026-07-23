@@ -429,7 +429,7 @@ ta6: [[1, is(validity_true=1), "Yes"],
   </testinput>
   <testinput>
     <name>ans4</name>
-    <value>mod(bucket_true,4)+1</value>
+    <value>ev(mod(bucket_true,4)+1,simp)</value>
   </testinput>
   <expected>
     <name>prt_ans3</name>
@@ -458,11 +458,11 @@ ta6: [[1, is(validity_true=1), "Yes"],
   </testinput>
   <testinput>
     <name>ans4</name>
-    <value>mod(bucket_true,4)+1</value>
+    <value>ev(mod(bucket_true,4)+1,simp)</value>
   </testinput>
   <testinput>
     <name>ans5</name>
-    <value>if (mod(bucket_true,4)+1)=1 or (mod(bucket_true,4)+1)=2 then 1 else 2</value>
+    <value>ev(if (mod(bucket_true,4)+1)=1 or (mod(bucket_true,4)+1)=2 then 1 else 2,simp)</value>
   </testinput>
   <expected>
     <name>prt_ans4</name>

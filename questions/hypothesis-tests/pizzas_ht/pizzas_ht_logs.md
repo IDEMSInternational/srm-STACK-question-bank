@@ -281,3 +281,17 @@ Seed 1: 2 test case(s) failed —
   Test case 4, PRT 'prt_ans5': got score None (expected 1), penalty None (expected 0), answer note '' (expected 'prt_ans5-1-T') —  (Score, Penalty, Answer note)
 ```
 
+## Entry 18 — reviewer-self-fix · attempt 3/3 (2026-07-23T17:14:44)
+
+**Reference files fetched:**
+- (none)
+
+**Already available (fetched earlier this session, not re-fetched):**
+- stack-docs/STACK_question_admin/Testing.md
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+```
+
