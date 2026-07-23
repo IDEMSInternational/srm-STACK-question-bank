@@ -18,26 +18,21 @@ this file holds the substance and meaning behind them, not the diffs.
 Question reserved as part of issue #2.
 ```
 
-## Entry 2 — author · attempt 1/3 (2026-07-23T16:29:20)
+## Entry 2 — reviewer · round 2 (2026-07-23T16:30:19)
+
+**Key facts to carry forward:**
+- No draft fields were present in this round's input; PRT/QTEST construction and review must wait until Author supplies the actual QUESTIONTEXT/QUESTIONVARIABLES/INPUT content described in the plan.
 
 **Reference files fetched:**
 - (none)
 
 ```text
-STACK API check: FAILED
-
-Render failed: Error rendering input: The model answer field for this input is malformed: <code>"R1"</code>. ,The teacher did not indicate at least one correct answer.
-```
-
-## Entry 3 — author · attempt 2/3 (2026-07-23T16:30:06)
-
-**Reference files fetched:**
-- stack-docs/Authoring/Inputs/Multiple_choice_input.md
-- stack-docs/Authoring/Inputs/index.md
-
-```text
-STACK API check: PASSED
-
-All checks passed.
+VERDICT: NEEDS REVISION
+SELF_FIXED:
+- (none)
+ESCALATED_TO_AUTHOR:
+- other The message contains no actual draft content to review — the "Draft to review:" section is empty, so there are no QUESTIONTEXT/QUESTIONVARIABLES/INPUT fields to check for syntax, math, or PRT/QTEST authorship. Author needs to actually produce the draft fields for this question (SE, hypotheses, t-score, P-value bucket, decision, validity-check parts) before any review or PRT/QTEST construction can proceed.
+NOTED_FOR_PLANNER:
+- (none)
 ```
 
