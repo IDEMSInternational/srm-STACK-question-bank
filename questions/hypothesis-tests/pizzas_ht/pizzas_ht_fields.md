@@ -105,7 +105,6 @@ INPUT ans1:
 TYPE: numerical
 TANS: se_true
 ANSWERTEST: NumSigFigs
-FORBIDFLOAT: 0
 
 INPUT ans2a:
 TYPE: algebraic
