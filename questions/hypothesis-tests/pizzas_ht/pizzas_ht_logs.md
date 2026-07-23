@@ -186,3 +186,14 @@ STACK API check: could not be completed
 Not well-formed XML: not well-formed (invalid token): line 155, column 31
 ```
 
+## Entry 12 — reviewer-self-fix · attempt 2/3 (2026-07-23T17:11:59)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: could not be completed
+
+Not well-formed XML: not well-formed (invalid token): line 155, column 31
+```
+
