@@ -140,3 +140,19 @@ NOTED_FOR_PLANNER:
 - `FORBIDFLOAT: 0` is written explicitly on every numerical input; since floats are exactly what's expected here, this matches STACK's own default and could simply be omitted (cosmetic only, not a defect).
 ```
 
+## Entry 8 — planner · review (2026-07-23T18:23:57)
+
+**Reference files fetched:**
+- (none)
+
+```text
+This is purely a randomization-range tweak inside the existing question variables — nothing about content (variables set, question text, feedback, input types) needs rewriting, just the numeric bounds on `t_target`'s third bin. That's squarely Reviewer's domain (constructing/validating the qtest and randomization logic), not new authoring. I'd suggest turning Author off for this round and letting Reviewer make the fix directly.
+
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: Widen the "borderline" t-bin in the question variables so genuine "do not reject H0" variants actually occur. Currently `tcase=2` uses `t_target: 2+rand(2)` (|t| ∈ {2,3}), which at df=36 always yields p<0.05 — so "do not reject" never occurs as a true correct answer, only as a synthetic qtest case. Change this bin to target |t| roughly in the 1.5–1.9 range (e.g. something like `t_target: float((15+rand(5))/10)` giving |t| ∈ {1.5,...,1.9}) so that across real variants in this bin, p sometimes falls above and sometimes below 0.05, and the true decision genuinely varies. Recheck that `se_b1: float(abs(b1)/t_target)` and downstream `r`, `p_true` still behave sensibly (no division issues, r still comes out consistently negative) with these smaller |t| values. Keep everything else as-is: the corrected `r` sign, all six real PRTs, the follow-through logic on the decision step (graded against the student's own p, not p_true), and the qtest cases — add or adjust a qtest case if useful to demonstrate a genuine "do not reject" variant, but this is optional.
+AGENT_SETTINGS_CHANGE: author=off
+```
+
