@@ -156,3 +156,30 @@ NOTED_FOR_PLANNER:
 - Minor style nit (not a bug): question variables introduce indirection symbols `option_larger`/`option_smaller`/`option_same`/`option_cant` purely to hold atoms `larger`/`smaller`/`same_size`/`cant_tell` — functionally fine, but could be simplified by using the atoms directly in `mcq_ans` without the extra aliasing variables.
 ```
 
+## Entry 9 — planner (2026-07-23T20:18:46)
+
+**Reference files fetched:**
+- (none)
+
+```text
+Here's my read of the current question before we discuss any change:
+
+**GOAL:** Test whether a student can compute required sample size for a mean's CI given z, s, and margin of error, and understand how sample size scales with margin of error and confidence level.
+
+**STRUCTURE:** Four parts:
+1. Compute n1 = ceil((z·s/E1)²), numeric input.
+2. Given E1/r2, compute new n — graded via follow-through against the student's own ans1 (ans1·r2²), with a diagnostic branch catching the ans1·r2 linear-scaling mistake.
+3. Same as part 2, independent ratio r3 (≠ r2), also following through from ans1 independently.
+4. Radio MCQ: would sample be smaller/larger/same/can't-tell at an alternate confidence level (90% or 99%, randomized)?
+
+**RANDOMIZATION:** s ∈ {1.0,...,2.5 step 0.1}, E1 ∈ {0.2,0.3,0.4,0.5}, r2 ∈ {2,3,4}, r3 ∈ remaining two values, confidence-direction dir ∈ {90-vs-95, 99-vs-95}, MCQ options shuffled.
+
+**ANSWER TESTS:** Parts 1–3 numeric (AlgEquiv, integer, forbidfloat); part 4 radio MCQ matched against the correct shuffled option.
+
+**FEEDBACK:** General feedback shows the formula substitution and ceiling step; part 2/3 PRTs distinguish "correct follow-through," "linear-scaling mistake," and "other wrong"; part 4 general feedback explains the z²-proportionality tradeoff.
+
+**IMPLEMENTATION NOTES:** Reviewer flagged two things worth knowing: (1) only one of the two part-4 directions is exercisable per deployed seed/qtest — inherent limitation, not a bug; (2) the exact-integer-square boundary case for part 1 can't be forced via qtest since n1 derives from randomized s/E1, not a direct input — also inherent, not a bug. Both qtest rounds passed, all 5 qtest cases verified consistent with PRT logic and free of degenerate coincidences.
+
+This matches the plan and issue #8 closely, and both review rounds concluded LOOKS GOOD. What would you like to change?
+```
+
