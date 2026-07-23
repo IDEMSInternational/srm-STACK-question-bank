@@ -18,41 +18,12 @@ this file holds the substance and meaning behind them, not the diffs.
 Question reserved as part of issue #2.
 ```
 
-## Entry 2 — author · attempt 1/3 (2026-07-23T16:32:47)
+## Entry 2 — planner · review (2026-07-23T16:35:46)
 
 **Reference files fetched:**
 - (none)
 
 ```text
-STACK API check: FAILED
-
-Render failed: apply: found fpprintprec evaluates to 12 where a function was expected.
-
-The field ""Question variables"" generated the following error: apply: found fpprintprec evaluates to 12 where a function was expected.
-```
-
-## Entry 3 — author · attempt 2/3 (2026-07-23T16:32:55)
-
-**Reference files fetched:**
-- (none)
-
-```text
-STACK API check: FAILED
-
-Render failed: Error rendering input: The model answer field for this input is malformed: <code>"\\neq 12"</code>. ,The teacher did not indicate at least one correct answer.
-```
-
-## Entry 4 — author · attempt 3/3 (2026-07-23T16:33:37)
-
-**Reference files fetched:**
-- stack-docs/Authoring/Inputs/Multiple_choice_input.md
-- stack-docs/Authoring/Question_note.md
-
-```text
-STACK API check: PASSED
-
-All checks passed.
-
-Deviations reported: none — this was a direct bugfix of the malformed dropdown TANS field flagged by Reviewer, using STACK's required `[[value, correct, display], ...]` MCQ model-answer format (per `Multiple_choice_input.md`), not a plan deviation.
+Run abandoned during the review conversation.
 ```
 
