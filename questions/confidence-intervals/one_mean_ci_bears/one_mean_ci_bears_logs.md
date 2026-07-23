@@ -329,3 +329,24 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 9 — reviewer · round 1 (2026-07-23T23:25:09)
+
+**Key facts to carry forward:**
+- The final, authoritative PRT/QTEST spec is now written directly into the fields (not just recorded in prior session notes); any future round should read it from the fields rather than reconstructing it from earlier entries.
+- prt_ans2/3/4's "correct_p" is computed via genuine follow-through from the student's own prior-part answer (`ans1`/`ans2`), not the teacher's `se`/`me` — this is essential to the follow-through credit requirement and must not be changed to reference `se_val`/`me_val` directly.
+- QTEST 1 and QTEST 4/5 use `se_val`/`me_val` (already-floated teacher values) as literal correct inputs for ans1/ans2, consistent with the numerical input's decimal-answer expectation.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: NEEDS REVISION
+SELF_FIXED:
+- Replaced the entire trivial placeholder PRT/QTEST block (all `SANS: true`/`TANS: true` nodes, which score every answer correct regardless of content) with the real follow-through grading logic previously settled for this question: `AlgEquiv` on explicit `correct_p`/`mistake_p`/`signerror_p` booleans (computed in each PRT's own feedback variables) for ans1–ans4, and `CasEqual` diagnostic-branch trees for ans5/ans6. This is PRT/QTEST authorship, which is always a self-fix regardless of size per my own scope.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- Numerical inputs for parts 1-4 rely on the student typing a manually-rounded decimal; a syntax hint or explicit "enter as a decimal" wording could reduce ambiguity.
+- Part 5's distractor set could add a subtly different "the sample mean will be within 1.96 SE of mu 95% of the time" style option for extra discriminating power.
+```
+
