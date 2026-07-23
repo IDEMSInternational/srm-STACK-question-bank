@@ -295,3 +295,21 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 19 — reviewer · round 1 (2026-07-23T17:14:47)
+
+**Key facts to carry forward:**
+- prt_ans1's NODE0 false branch routes to NODE1 (FALSENEXT:1) rather than terminating, so any qtest case with a non-matching ans1 (e.g. ans1=0) must expect whatever NODE1 concludes (e.g. NODE1-F), never NODE0-F, since NODE0's false path is never itself a terminal answer note.
+
+**Reference files fetched:**
+- stack-docs/STACK_question_admin/Testing.md
+
+```text
+VERDICT: MINOR ISSUES
+SELF_FIXED:
+- QTEST10's `EXPECT prt_ans1: NODE0-F` is wrong: prt_ans1's NODE0 has a `FALSENEXT: 1`, so its false branch merely routes to NODE1 rather than terminating — the terminal node actually reached with `ans1=0` is NODE1 (since `abs(0-(s/n))<=0.01*(s/n)` is false for any nonzero `s/n`), giving answer note `NODE1-F`. Fixed to expect `NODE1-F` instead of `NODE0-F`; this is a contained qtest-expectation correction with no effect elsewhere.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- SE relative tolerance (1%) and t-score decimal-place check remain generous by design; could be tightened if a stricter check is pedagogically preferred, but current margins comfortably separate correct answers from the s/n and sign-flip mistakes across the full random range.
+```
+
