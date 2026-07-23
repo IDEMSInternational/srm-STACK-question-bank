@@ -304,3 +304,17 @@ NOTED_FOR_PLANNER:
 - Part 5's distractor options could also include a distractor about "the sample mean will be within 1.96 SE of mu 95% of the time" style wording, which is subtly different from the interval-based ones already present, for extra discriminating power.
 ```
 
+## Entry 7 — planner · review (2026-07-23T20:21:13)
+
+**Reference files fetched:**
+- (none)
+
+```text
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: The current draft XML still has trivial placeholder PRTs for all six inputs (every node is `<sans>true</sans>`/`<tans>true</tans>`, always scoring correct regardless of the student's actual answer) and a qtest block that never really exercises the grading logic. This must be replaced with the real follow-through PRT/QTEST spec already settled for this question (see KEY FACTS ESTABLISHED, full node-by-node spec and all 9 qtest cases): ans1–ans4 graded via `AlgEquiv` on explicit `correct_p`/`mistake_p`/`signerror_p` booleans computed in feedback variables (SE→ME→bounds follow-through chain, with classic-mistake diagnostic branches scored 0/penalty 0.1), ans5 graded via `CasEqual` against the symbolic `valid_p` (never a hardcoded boolean), and ans6 graded via `CasEqual` against the correct interpretation option with three diagnostic distractor branches. Implement exactly that spec, including all 9 qtest cases with their described expected notes/scores/penalties.
+AGENT_SETTINGS_CHANGE: author=off
+```
+
