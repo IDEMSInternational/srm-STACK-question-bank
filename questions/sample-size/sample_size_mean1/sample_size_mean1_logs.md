@@ -109,3 +109,19 @@ NOTED_FOR_PLANNER:
 - Only one of the two Part-4 randomized directions (90-vs-95 or 99-vs-95) can ever be exercised by a qtest for a given variant, since `dir` is a question variable fixed once per variant — genuinely testing both directions would require two separately-seeded variants/deployments, which is outside qtest's scope. Noted as a limitation of the "test both directions" suggestion, not a bug.
 ```
 
+## Entry 6 — planner · review (2026-07-23T18:28:33)
+
+**Reference files fetched:**
+- (none)
+
+```text
+Good catch — that's a real display bug in the question variables, not something Reviewer's PRT/qtest work can fix, since it's about how `s` itself is defined. This needs to go back to Author.
+
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: In the question variables, `s: (5+rand(16))/10;` stays an exact Maxima rational (e.g. 6/5, 4/5) rather than a clean decimal, since 5, rand(16), and 10 are all integers — so `{@s@}` in the question text/questionnote can display as "6/5 kg" instead of "1.2 kg", which doesn't match how a standard deviation would normally be stated. Fix by forcing float arithmetic in the definition itself, e.g. `s: (5+rand(16))/10.0;` (or wrap in `float(...)`), so `s` always renders as a one-decimal number regardless of which integer `rand(16)` draws. Everything downstream (n1, n2, n3 computations) remains mathematically consistent either way — this is purely a display/authoring fix to the variable definition, not a PRT change.
+AGENT_SETTINGS_CHANGE: (not applicable)
+```
+
