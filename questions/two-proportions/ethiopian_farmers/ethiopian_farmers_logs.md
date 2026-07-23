@@ -138,3 +138,18 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 8 — reviewer · round 1 (2026-07-23T18:34:48)
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: LOOKS GOOD
+SELF_FIXED:
+- (none)
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- (none) — the em-tag fix requested last round has been applied correctly by Author, and the full PRT/QTEST logic built in the prior review round remains internally consistent (odds/table reconstruction, pooled/unpooled SE distinctions, follow-through guards, and all six qtest cases checked arithmetically against the PRT logic — no coincidental degeneracies found in the "wrong-but-consistent" or adversarial cases).
+```
+
