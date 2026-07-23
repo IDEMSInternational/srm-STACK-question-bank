@@ -60,3 +60,14 @@ FEEDBACK: Worked solution walks through t = b1/SE, exact p-value via the t-distr
 PRT/QTEST SUGGESTIONS: Test a borderline variant where |t|≈2 so p is close to 0.05 on both sides of the threshold — verify the decision branch flips correctly. Test follow-through explicitly: a student who gets t wrong (e.g. sign flip) but then computes a p-value and decision consistent with their own wrong t should still score those steps as correct. Also test a very-strong-evidence variant (|t|≈13, matching the book) to confirm the exact p-value calculation doesn't choke or underflow at extreme t. Confirm the one-tailed p-value direction is computed correctly given H1: β1<0 (i.e., not silently reporting the two-tailed value).
 ```
 
+## Entry 3 — author · attempt 1/3 (2026-07-23T18:18:06)
+
+**Reference files fetched:**
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
+
+```text
+STACK API check: FAILED
+
+Render failed: Error(s) in question-variables: Forbidden function: <span class="stacksyntaxexample">load</span>.
+```
+
