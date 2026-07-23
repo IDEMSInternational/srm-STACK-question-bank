@@ -161,3 +161,17 @@ NOTED_FOR_PLANNER:
 - The documented t_abs ranges in the session's carried-forward key facts (e.g. "3.2–4.1") are approximate labels; the actual Maxima ranges are slightly narrower (e.g. bucket 1 is really 3.2–4.0) — not a bug, just worth knowing the exact bounds don't literally match the label if anyone re-derives margins later.
 ```
 
+## Entry 10 — planner · review (2026-07-23T17:11:39)
+
+**Reference files fetched:**
+- (none)
+
+```text
+DECISION: REJECT
+PLAN_CHANGED: NO
+KEEP_DRAFT: YES
+REVISED_PLAN: (not applicable)
+FEEDBACK_TO_AUTHOR: Please remove the redundant `<forbidfloat>0</forbidfloat>` line from the `ans1` input — it's just the default value spelled out explicitly and serves no purpose. This is a pure cosmetic cleanup of the input spec; no other content, randomization, PRT, or feedback changes are needed. Leave the SE (1% relative) and t-score (2 decimal place) tolerances exactly as they are.
+AGENT_SETTINGS_CHANGE: (not applicable)
+```
+
