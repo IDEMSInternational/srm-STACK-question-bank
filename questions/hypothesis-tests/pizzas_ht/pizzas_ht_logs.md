@@ -139,3 +139,25 @@ FEEDBACK_TO_AUTHOR: Build failed with "Not well-formed XML: not well-formed (inv
 AGENT_SETTINGS_CHANGE: author=off
 ```
 
+## Entry 9 — reviewer · round 1 (2026-07-23T17:10:29)
+
+**Key facts to carry forward:**
+- The PRT/QTEST content in this draft (built in an earlier reviewer round, entry 7) is mathematically and structurally correct: all node logic, follow-through chaining (ans3→ans4→ans5), boundary qtests (t≈0.99/1.99/2.99/3.01 etc.), and division-by-zero/sign-flip adversarial cases were re-verified by hand this round and all check out against the actual Maxima logic in questionvariables.
+- The previously reported "Not well-formed XML: line 155, column 31" build failure was a pure XML-serialization artifact from literal `<=`/`<` characters in SANS/feedback text; per current pipeline rules the assembler now auto-CDATA-wraps any field containing `<`, `>`, or `&`, so this should no longer manifest — no manual escaping was added or is needed in the fields text itself.
+- Exact t_abs sub-ranges per bucket (from `rand(k)/10` truncation) are: bucket1 3.2–4.0, bucket2 2.2–2.8, bucket3 1.2–1.8, bucket4 0.3–0.8 — all still ≥0.2 from any bucket boundary, comfortably exceeding the ~0.024 max t-shift introduced by rounding xbar to 3 decimals.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: LOOKS GOOD
+SELF_FIXED:
+- (none)
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- ans1 input still has `FORBIDFLOAT: 0` explicitly set, which is just the default value spelled out — harmless but unnecessary; could be dropped for a cleaner input spec.
+- SE relative tolerance (1%) and t-score decimal-place check are generous by design; could be tightened if a stricter check is pedagogically preferred, but current margins were chosen to comfortably separate correct answers from the s/n and sign-flip mistakes across the full random range.
+- The documented t_abs ranges in the session's carried-forward key facts (e.g. "3.2–4.1") are approximate labels; the actual Maxima ranges are slightly narrower (e.g. bucket 1 is really 3.2–4.0) — not a bug, just worth knowing the exact bounds don't literally match the label if anyone re-derives margins later.
+```
+
