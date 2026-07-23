@@ -113,3 +113,30 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 7 — reviewer · round 1 (2026-07-23T18:23:19)
+
+**Key facts to carry forward:**
+- `r`'s sign was corrected (removed an extra negation) so it now correctly comes out negative for every variant, matching the plan's "sign negative" requirement.
+- The decision PRT grades follow-through from the student's own `ans_p` (via `if is(ans_p<0.05) then reject else noreject`), not from the true `p_true` — this is deliberate per the plan's ANSWER TESTS section, and qtest cases 3/4 exercise this explicitly with variant-independent crafted values rather than relying on the actual random draw.
+- With the current randomization (`t_target` minimum |t|=2, df=36), the true correct decision is always "reject H0" in every possible variant — "do not reject" as a *true* answer never actually occurs, only as a follow-through possibility from a student's own wrong p-value.
+
+**Reference files fetched:**
+- (none)
+
+**Already available (fetched earlier this session, not re-fetched):**
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
+
+```text
+VERDICT: NEEDS REVISION
+SELF_FIXED:
+- Fixed sign bug in `r` computation: the draft's `r: float(-t_true/sqrt(df+t_true^2));` includes a spurious extra negative sign. Since `t_true` is already negative (b1<0, se_b1>0), the standard relation `t = r*sqrt(df)/sqrt(1-r^2)` requires `r = t_true/sqrt(df+t_true^2)` (no extra negation) to correctly come out negative, matching the plan's explicit "sign negative" requirement. This is a one-line fix, contained entirely within QUESTIONVARIABLES — `{@r@}` is displayed as-is everywhere else, so nothing else needs to change.
+- Replaced all six placeholder PRTs (`SANS: true / TANS: true`) with real grading logic, per my own PRT/QTEST authorship mandate: numeric parts (t, p, R², CI bounds) now use explicit tolerance checks compared via AlgEquiv rather than bare placeholders; the decision PRT now implements genuine follow-through — it compares the student's MCQ choice against `if is(ans_p<0.05) then reject else noreject`, i.e. consistency with the student's *own* submitted p-value, exactly as the (negotiable) ANSWER TESTS section specifies, rather than against the true p-value.
+- Rewrote QTEST to 6 real cases: happy path, an isolated wrong-t case, a wrong-p-but-consistent-decision follow-through case, a correct-p-but-inconsistent-decision case, a wrong-R² case, and a swapped-CI-bounds case. Wrong values use variant-independent offsets (e.g. `t_true+1`, `ans_p:100`, swapped CI bounds) so they can't coincidentally collapse to the correct answer for any value the random variables can take.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- The randomization for the "borderline" t-bin uses `t_target: 2+rand(2)` (i.e. |t| ∈ {2,3}), but for df=36 this always yields p < 0.05 (p≈0.027 at t=2, smaller at t=3) — so across every possible random variant, the true correct decision is always "reject H0"; "do not reject" never actually occurs as the correct answer in any real variant (though it's still exercised in qtest via a crafted student p-value). If a genuine "do not reject" variant is pedagogically wanted, the borderline bin would need to include |t| closer to ~1.5–1.9 (df=36, p≈0.05 near t≈1.69).
+- There's a slight tension between the (negotiable) ANSWER TESTS section, which says p is graded absolutely against the true p-value, and the PRT/QTEST SUGGESTIONS section, which describes follow-through from a wrong t into p/decision. I implemented the ANSWER TESTS version (p graded absolutely, only decision has follow-through from the student's own p) since it's the more specific/explicit of the two; flagging in case the intent was actually full t→p→decision follow-through chaining.
+- `FORBIDFLOAT: 0` is written explicitly on every numerical input; since floats are exactly what's expected here, this matches STACK's own default and could simply be omitted (cosmetic only, not a defect).
+```
+
