@@ -47,6 +47,12 @@ bucket_label: if bucket=1 then "P<0.003" else
               "P>0.32";
 decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0";
 
+/* MCQ option lists in the required [value, correct, display] format */
+ans2b_ta: [[1, false, "&lt; 12"], [2, true, "&ne; 12"], [3, false, "&gt; 12"]];
+ans4_ta: [[1, is(bucket=1), "P&lt;0.003"], [2, is(bucket=2), "0.003&lt;P&lt;0.05"], [3, is(bucket=3), "0.05&lt;P&lt;0.32"], [4, is(bucket=4), "P&gt;0.32"]];
+ans5_ta: [[1, is(bucket=1 or bucket=2), "Reject H0"], [2, is(bucket=3 or bucket=4), "Fail to reject H0"]];
+ans6_ta: [[1, true, "Yes"], [2, false, "No"]];
+
 GENERALFEEDBACK:
 <p>The standard error is \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{{@s@}}{\sqrt{{@n@}}}={@SE@}\). A common mistake is computing \(s/n\) instead of \(s/\sqrt{n}\).</p>
 
@@ -78,7 +84,7 @@ SHOWVALIDATION: 0
 
 INPUT ans2b:
 TYPE: dropdown
-TANS: "\\neq 12"
+TANS: ans2b_ta
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
@@ -90,19 +96,19 @@ BOXSIZE: 10
 
 INPUT ans4:
 TYPE: dropdown
-TANS: bucket_label
+TANS: ans4_ta
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
 INPUT ans5:
 TYPE: dropdown
-TANS: decision_label
+TANS: ans5_ta
 ANSWERTEST: String
 SHOWVALIDATION: 0
 
 INPUT ans6:
 TYPE: dropdown
-TANS: "Yes"
+TANS: ans6_ta
 ANSWERTEST: String
 SHOWVALIDATION: 0
 

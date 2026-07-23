@@ -51,7 +51,13 @@ bucket_label: if bucket=1 then "P<0.003" else
               if bucket=2 then "0.003<P<0.05" else
               if bucket=3 then "0.05<P<0.32" else
               "P>0.32";
-decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0";]]></text>
+decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0";
+
+/* MCQ option lists in the required [value, correct, display] format */
+ans2b_ta: [[1, false, "&lt; 12"], [2, true, "&ne; 12"], [3, false, "&gt; 12"]];
+ans4_ta: [[1, is(bucket=1), "P&lt;0.003"], [2, is(bucket=2), "0.003&lt;P&lt;0.05"], [3, is(bucket=3), "0.05&lt;P&lt;0.32"], [4, is(bucket=4), "P&gt;0.32"]];
+ans5_ta: [[1, is(bucket=1 or bucket=2), "Reject H0"], [2, is(bucket=3 or bucket=4), "Fail to reject H0"]];
+ans6_ta: [[1, true, "Yes"], [2, false, "No"]];]]></text>
 </questionvariables>
 <generalfeedback format="html">
 <text><![CDATA[<p>The standard error is \(SE=\dfrac{s}{\sqrt{n}}=\dfrac{{@s@}}{\sqrt{{@n@}}}={@SE@}\). A common mistake is computing \(s/n\) instead of \(s/\sqrt{n}\).</p>
@@ -86,7 +92,7 @@ decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0
 <input>
 <name>ans2b</name>
 <type>dropdown</type>
-<tans>"\\neq 12"</tans>
+<tans>ans2b_ta</tans>
 <showvalidation>0</showvalidation>
 </input>
 <input>
@@ -99,19 +105,19 @@ decision_label: if bucket=1 or bucket=2 then "Reject H0" else "Fail to reject H0
 <input>
 <name>ans4</name>
 <type>dropdown</type>
-<tans>bucket_label</tans>
+<tans>ans4_ta</tans>
 <showvalidation>0</showvalidation>
 </input>
 <input>
 <name>ans5</name>
 <type>dropdown</type>
-<tans>decision_label</tans>
+<tans>ans5_ta</tans>
 <showvalidation>0</showvalidation>
 </input>
 <input>
 <name>ans6</name>
 <type>dropdown</type>
-<tans>"Yes"</tans>
+<tans>ans6_ta</tans>
 <showvalidation>0</showvalidation>
 </input>
 <prt>
