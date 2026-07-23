@@ -104,49 +104,140 @@ mcq_interp: [
 </input>
 <prt>
   <name>prt_ans1</name>
+  <feedbackvariables>
+    <text><![CDATA[tol: 0.0005;
+correct_p: is(abs(ans1-se_val)<tol);
+mistake_p: is(abs(ans1-float(s/n))<tol);]]></text>
+  </feedbackvariables>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>correct_p</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans1-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans1-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>mistake_p</sans>
+    <tans>true</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans1-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>It looks like you divided by \(n\) instead of \(\sqrt{n}\) — remember \(SE=s/\sqrt{n}\), not \(s/n\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans1-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — check your calculation of \(SE=s/\sqrt{n}\).</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
 <prt>
   <name>prt_ans2</name>
+  <feedbackvariables>
+    <text><![CDATA[tol2: 0.0005;
+me_from_ans1: float(z*ans1);
+correct_p: is(abs(ans2-me_from_ans1)<tol2);
+mistake_p: is(abs(ans2-float(ans1))<tol2);]]></text>
+  </feedbackvariables>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>correct_p</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans2-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans2-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>mistake_p</sans>
+    <tans>true</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans2-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>It looks like you used your \(SE\) directly as the margin of error — remember to multiply by \(z^*=1.96\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans2-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — check \(ME=z^*\times SE\), using your own \(SE\) from Part 1.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
 <prt>
   <name>prt_ans3</name>
+  <feedbackvariables>
+    <text><![CDATA[tol3: 0.005;
+lower_from_ans2: float(xbar-ans2);
+correct_p: is(abs(ans3-lower_from_ans2)<tol3);
+signerror_p: is(abs(ans3-float(xbar+ans2))<tol3);]]></text>
+  </feedbackvariables>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>correct_p</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans3-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans3-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>signerror_p</sans>
+    <tans>true</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans3-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>This matches the upper bound, not the lower bound — the lower bound is \(\bar{x}-ME\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans3-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — check your arithmetic for \(\bar{x}-ME\), using your own \(ME\) from Part 2.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
 <prt>
   <name>prt_ans4</name>
+  <feedbackvariables>
+    <text><![CDATA[tol4: 0.005;
+upper_from_ans2: float(xbar+ans2);
+correct_p: is(abs(ans4-upper_from_ans2)<tol4);
+signerror_p: is(abs(ans4-float(xbar-ans2))<tol4);]]></text>
+  </feedbackvariables>
   <node>
     <name>0</name>
     <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
+    <sans>correct_p</sans>
     <tans>true</tans>
     <trueanswernote>prt_ans4-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans4-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>signerror_p</sans>
+    <tans>true</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans4-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>This matches the lower bound, not the upper bound — the upper bound is \(\bar{x}+ME\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans4-2-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — check your arithmetic for \(\bar{x}+ME\), using your own \(ME\) from Part 2.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 
@@ -154,9 +245,9 @@ mcq_interp: [
   <name>prt_ans5</name>
   <node>
     <name>0</name>
-    <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <answertest>CasEqual</answertest>
+    <sans>ans5</sans>
+    <tans>valid_p</tans>
     <trueanswernote>prt_ans5-1-T</trueanswernote>
     <falseanswernote>prt_ans5-1-F</falseanswernote>
   </node>
@@ -166,34 +257,80 @@ mcq_interp: [
   <name>prt_ans6</name>
   <node>
     <name>0</name>
-    <answertest>AlgEquiv</answertest>
-    <sans>true</sans>
-    <tans>true</tans>
+    <answertest>CasEqual</answertest>
+    <sans>ans6</sans>
+    <tans>2</tans>
     <trueanswernote>prt_ans6-1-T</trueanswernote>
+    <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans6-1-F</falseanswernote>
+  </node>
+  <node>
+    <name>1</name>
+    <answertest>CasEqual</answertest>
+    <sans>ans6</sans>
+    <tans>1</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans6-2-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>This describes a probability statement about a fixed interval containing a fixed parameter — that's not what "95% confidence" means. The confidence level describes the long-run success rate of the method.</p>]]></text>
+    </truefeedback>
+    <falsenextnode>2</falsenextnode>
+    <falseanswernote>prt_ans6-2-F</falseanswernote>
+  </node>
+  <node>
+    <name>2</name>
+    <answertest>CasEqual</answertest>
+    <sans>ans6</sans>
+    <tans>3</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans6-3-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>This describes individual bears, but the interval is about the population mean weight \(\mu\), not individual weights.</p>]]></text>
+    </truefeedback>
+    <falsenextnode>3</falsenextnode>
+    <falseanswernote>prt_ans6-3-F</falseanswernote>
+  </node>
+  <node>
+    <name>3</name>
+    <answertest>CasEqual</answertest>
+    <sans>ans6</sans>
+    <tans>4</tans>
+    <truescore>0</truescore>
+    <truepenalty>0.1</truepenalty>
+    <trueanswernote>prt_ans6-4-T</trueanswernote>
+    <truefeedback format="html">
+      <text><![CDATA[<p>This describes the sampling distribution of \(\bar{x}\) across repeated samples, not what a single confidence interval tells us about \(\mu\).</p>]]></text>
+    </truefeedback>
+    <falseanswernote>prt_ans6-4-F</falseanswernote>
+    <falsefeedback format="html">
+      <text><![CDATA[<p>Not correct — review what "95% confidence" actually means for this interval.</p>]]></text>
+    </falsefeedback>
   </node>
 </prt>
 <qtest>
   <testcase>1</testcase>
+  <description>Fully correct answers throughout</description>
   <testinput>
     <name>ans1</name>
-    <value>se</value>
+    <value>se_val</value>
   </testinput>
   <testinput>
     <name>ans2</name>
-    <value>me</value>
+    <value>me_val</value>
   </testinput>
   <testinput>
     <name>ans3</name>
-    <value>lower</value>
+    <value>lower_val</value>
   </testinput>
   <testinput>
     <name>ans4</name>
-    <value>upper</value>
+    <value>upper_val</value>
   </testinput>
   <testinput>
     <name>ans5</name>
-    <value>true</value>
+    <value>valid_p</value>
   </testinput>
   <testinput>
     <name>ans6</name>
@@ -234,6 +371,196 @@ mcq_interp: [
     <expectedscore>1.0000000</expectedscore>
     <expectedpenalty>0.0000000</expectedpenalty>
     <expectedanswernote>prt_ans6-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>2</testcase>
+  <description>Classic SE mistake (s/n instead of s/sqrt(n))</description>
+  <testinput>
+    <name>ans1</name>
+    <value>float(s/n)</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-2-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>3</testcase>
+  <description>Follow-through — consistently wrong SE (forgot sqrt) should still earn ME/bounds credit</description>
+  <testinput>
+    <name>ans1</name>
+    <value>float(s/n)</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>float(z*(s/n))</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>float(xbar-z*(s/n))</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>float(xbar+z*(s/n))</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-2-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>4</testcase>
+  <description>Correct SE/ME but sign-flipped bounds — must be marked wrong independent of Parts 1-2</description>
+  <testinput>
+    <name>ans1</name>
+    <value>se_val</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>me_val</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>float(xbar+me)</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>float(xbar-me)</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-2-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-2-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>5</testcase>
+  <description>Validity check graded strictly off actual n, regardless of an unrelated wrong SE</description>
+  <testinput>
+    <name>ans1</name>
+    <value>float(s/n)</value>
+  </testinput>
+  <testinput>
+    <name>ans5</name>
+    <value>valid_p</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-2-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans5</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans5-1-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>6</testcase>
+  <description>Validity check answered incorrectly (opposite of actual n)</description>
+  <testinput>
+    <name>ans5</name>
+    <value>not valid_p</value>
+  </testinput>
+  <expected>
+    <name>prt_ans5</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans5-1-F</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>7</testcase>
+  <description>Interpretation — probability misinterpretation distractor</description>
+  <testinput>
+    <name>ans6</name>
+    <value>1</value>
+  </testinput>
+  <expected>
+    <name>prt_ans6</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans6-2-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>8</testcase>
+  <description>Interpretation — individual-bears misinterpretation distractor</description>
+  <testinput>
+    <name>ans6</name>
+    <value>3</value>
+  </testinput>
+  <expected>
+    <name>prt_ans6</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans6-3-T</expectedanswernote>
+  </expected>
+</qtest>
+
+<qtest>
+  <testcase>9</testcase>
+  <description>Interpretation — repeated-sample-means misinterpretation distractor</description>
+  <testinput>
+    <name>ans6</name>
+    <value>4</value>
+  </testinput>
+  <expected>
+    <name>prt_ans6</name>
+    <expectedscore>0.0000000</expectedscore>
+    <expectedpenalty>0.1000000</expectedpenalty>
+    <expectedanswernote>prt_ans6-4-T</expectedanswernote>
   </expected>
 </qtest>
 </question>

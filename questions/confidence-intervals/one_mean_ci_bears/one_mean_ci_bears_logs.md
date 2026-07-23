@@ -318,3 +318,14 @@ FEEDBACK_TO_AUTHOR: The current draft XML still has trivial placeholder PRTs for
 AGENT_SETTINGS_CHANGE: author=off
 ```
 
+## Entry 8 — reviewer-self-fix · attempt 1/3 (2026-07-23T23:25:05)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: PASSED
+
+All checks passed.
+```
+

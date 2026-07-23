@@ -93,41 +93,128 @@ ANSWERTEST: CasEqual
 SHOWVALIDATION: 0
 
 PRT prt_ans1:
+FEEDBACKVARIABLES:
+tol: 0.0005;
+correct_p: is(abs(ans1-se_val)<tol);
+mistake_p: is(abs(ans1-float(s/n))<tol);
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: correct_p
 TANS: true
+FALSENEXT: 1
+NODE 1:
+TEST: AlgEquiv
+SANS: mistake_p
+TANS: true
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>It looks like you divided by \(n\) instead of \(\sqrt{n}\) — remember \(SE=s/\sqrt{n}\), not \(s/n\).</p>
+FALSEFEEDBACK: <p>Not correct — check your calculation of \(SE=s/\sqrt{n}\).</p>
 
 PRT prt_ans2:
+FEEDBACKVARIABLES:
+tol2: 0.0005;
+me_from_ans1: float(z*ans1);
+correct_p: is(abs(ans2-me_from_ans1)<tol2);
+mistake_p: is(abs(ans2-float(ans1))<tol2);
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: correct_p
 TANS: true
+FALSENEXT: 1
+NODE 1:
+TEST: AlgEquiv
+SANS: mistake_p
+TANS: true
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>It looks like you used your \(SE\) directly as the margin of error — remember to multiply by \(z^*=1.96\).</p>
+FALSEFEEDBACK: <p>Not correct — check \(ME=z^*\times SE\), using your own \(SE\) from Part 1.</p>
 
 PRT prt_ans3:
+FEEDBACKVARIABLES:
+tol3: 0.005;
+lower_from_ans2: float(xbar-ans2);
+correct_p: is(abs(ans3-lower_from_ans2)<tol3);
+signerror_p: is(abs(ans3-float(xbar+ans2))<tol3);
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: correct_p
 TANS: true
+FALSENEXT: 1
+NODE 1:
+TEST: AlgEquiv
+SANS: signerror_p
+TANS: true
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>This matches the upper bound, not the lower bound — the lower bound is \(\bar{x}-ME\).</p>
+FALSEFEEDBACK: <p>Not correct — check your arithmetic for \(\bar{x}-ME\), using your own \(ME\) from Part 2.</p>
 
 PRT prt_ans4:
+FEEDBACKVARIABLES:
+tol4: 0.005;
+upper_from_ans2: float(xbar+ans2);
+correct_p: is(abs(ans4-upper_from_ans2)<tol4);
+signerror_p: is(abs(ans4-float(xbar-ans2))<tol4);
 NODE 0:
-SANS: true
+TEST: AlgEquiv
+SANS: correct_p
 TANS: true
+FALSENEXT: 1
+NODE 1:
+TEST: AlgEquiv
+SANS: signerror_p
+TANS: true
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>This matches the lower bound, not the upper bound — the upper bound is \(\bar{x}+ME\).</p>
+FALSEFEEDBACK: <p>Not correct — check your arithmetic for \(\bar{x}+ME\), using your own \(ME\) from Part 2.</p>
 
 PRT prt_ans5:
 NODE 0:
-SANS: true
-TANS: true
+TEST: CasEqual
+SANS: ans5
+TANS: valid_p
 
 PRT prt_ans6:
 NODE 0:
-SANS: true
-TANS: true
+TEST: CasEqual
+SANS: ans6
+TANS: 2
+FALSENEXT: 1
+NODE 1:
+TEST: CasEqual
+SANS: ans6
+TANS: 1
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>This describes a probability statement about a fixed interval containing a fixed parameter — that's not what "95% confidence" means. The confidence level describes the long-run success rate of the method.</p>
+FALSENEXT: 2
+NODE 2:
+TEST: CasEqual
+SANS: ans6
+TANS: 3
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>This describes individual bears, but the interval is about the population mean weight \(\mu\), not individual weights.</p>
+FALSENEXT: 3
+NODE 3:
+TEST: CasEqual
+SANS: ans6
+TANS: 4
+TRUESCORE: 0
+TRUEPENALTY: 0.1
+TRUEFEEDBACK: <p>This describes the sampling distribution of \(\bar{x}\) across repeated samples, not what a single confidence interval tells us about \(\mu\).</p>
+FALSEFEEDBACK: <p>Not correct — review what "95% confidence" actually means for this interval.</p>
 
 QTEST 1:
-INPUT ans1: se
-INPUT ans2: me
-INPUT ans3: lower
-INPUT ans4: upper
-INPUT ans5: true
+DESCRIPTION: Fully correct answers throughout
+INPUT ans1: se_val
+INPUT ans2: me_val
+INPUT ans3: lower_val
+INPUT ans4: upper_val
+INPUT ans5: valid_p
 INPUT ans6: 2
 EXPECT prt_ans1: NODE0-T
 EXPECT prt_ans2: NODE0-T
@@ -135,3 +222,57 @@ EXPECT prt_ans3: NODE0-T
 EXPECT prt_ans4: NODE0-T
 EXPECT prt_ans5: NODE0-T
 EXPECT prt_ans6: NODE0-T
+
+QTEST 2:
+DESCRIPTION: Classic SE mistake (s/n instead of s/sqrt(n))
+INPUT ans1: float(s/n)
+EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+
+QTEST 3:
+DESCRIPTION: Follow-through — consistently wrong SE (forgot sqrt) should still earn ME/bounds credit
+INPUT ans1: float(s/n)
+INPUT ans2: float(z*(s/n))
+INPUT ans3: float(xbar-z*(s/n))
+INPUT ans4: float(xbar+z*(s/n))
+EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+EXPECT prt_ans2: NODE0-T
+EXPECT prt_ans3: NODE0-T
+EXPECT prt_ans4: NODE0-T
+
+QTEST 4:
+DESCRIPTION: Correct SE/ME but sign-flipped bounds — must be marked wrong independent of Parts 1-2
+INPUT ans1: se_val
+INPUT ans2: me_val
+INPUT ans3: float(xbar+me)
+INPUT ans4: float(xbar-me)
+EXPECT prt_ans1: NODE0-T
+EXPECT prt_ans2: NODE0-T
+EXPECT prt_ans3: NODE1-T SCORE=0 PENALTY=0.1
+EXPECT prt_ans4: NODE1-T SCORE=0 PENALTY=0.1
+
+QTEST 5:
+DESCRIPTION: Validity check graded strictly off actual n, regardless of an unrelated wrong SE
+INPUT ans1: float(s/n)
+INPUT ans5: valid_p
+EXPECT prt_ans1: NODE1-T SCORE=0 PENALTY=0.1
+EXPECT prt_ans5: NODE0-T
+
+QTEST 6:
+DESCRIPTION: Validity check answered incorrectly (opposite of actual n)
+INPUT ans5: not valid_p
+EXPECT prt_ans5: NODE0-F
+
+QTEST 7:
+DESCRIPTION: Interpretation — probability misinterpretation distractor
+INPUT ans6: 1
+EXPECT prt_ans6: NODE1-T SCORE=0 PENALTY=0.1
+
+QTEST 8:
+DESCRIPTION: Interpretation — individual-bears misinterpretation distractor
+INPUT ans6: 3
+EXPECT prt_ans6: NODE2-T SCORE=0 PENALTY=0.1
+
+QTEST 9:
+DESCRIPTION: Interpretation — repeated-sample-means misinterpretation distractor
+INPUT ans6: 4
+EXPECT prt_ans6: NODE3-T SCORE=0 PENALTY=0.1
