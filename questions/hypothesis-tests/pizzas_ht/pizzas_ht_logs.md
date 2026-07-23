@@ -101,3 +101,27 @@ STACK API check: could not be completed
 Not well-formed XML: not well-formed (invalid token): line 155, column 31
 ```
 
+## Entry 7 — reviewer · round 1 (2026-07-23T17:07:26)
+
+**Key facts to carry forward:**
+- prt_ans1 has two nodes (NODE0 true=correct terminal, NODE1 diagnostic for the s/n mistake); its qtest answer notes are NODE0-T / NODE1-T / NODE1-F accordingly, not NODE0-F.
+- prt_ans3 has three nodes: NODE0 guards ans1=0 (division-by-zero adversarial case, terminal score 0), NODE1 is the correct-follow-through check, NODE2 is the sign-flip diagnostic; a correct answer's path is NODE0-F then NODE1-T (reported as NODE1-T).
+- Parts 4 and 5 are graded entirely from the student's own prior answers (ans3, ans4) via inline if/elseif Maxima expressions in each node's SANS, never against the teacher's true bucket/decision — this is what implements the plan's follow-through requirement.
+- t_abs ranges per bucket (3.2–4.1, 2.2–2.9, 1.2–1.9, 0.3–0.9) keep every bucket at least 0.2 away from a boundary, comfortably absorbing the rounding of xbar to 3 decimal places, so no qtest case needs to guard against a boundary-crossing coincidence from the random draw itself.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: MINOR ISSUES
+SELF_FIXED:
+- Replaced Author's trivial placeholder PRTs and single qtest with real, follow-through-aware PRT logic and a full qtest suite (PRT/QTEST authorship is always my own job, not a bug fix).
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- ans1 input has `FORBIDFLOAT: 0` explicitly set, which is just the default value spelled out — harmless but unnecessary; could be dropped for a cleaner input spec.
+- Consider tightening the SE tolerance (currently 1% relative) if a stricter check is pedagogically preferred; chosen generously to comfortably separate correct answers from the s/n mistake without false negatives across the whole random range.
+
+[Self-fix could not be verified against the STACK API.]
+```
+
