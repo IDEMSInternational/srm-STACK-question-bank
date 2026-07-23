@@ -82,13 +82,13 @@ BOXSIZE: 10
 
 INPUT ans5:
 TYPE: radio
-TANS: true
+TANS: mcq_valid
 ANSWERTEST: CasEqual
 SHOWVALIDATION: 0
 
 INPUT ans6:
 TYPE: radio
-TANS: 2
+TANS: mcq_interp
 ANSWERTEST: CasEqual
 SHOWVALIDATION: 0
 

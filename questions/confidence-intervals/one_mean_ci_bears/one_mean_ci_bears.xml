@@ -93,13 +93,13 @@ mcq_interp: [
 <input>
 <name>ans5</name>
 <type>radio</type>
-<tans>true</tans>
+<tans>mcq_valid</tans>
 <showvalidation>0</showvalidation>
 </input>
 <input>
 <name>ans6</name>
 <type>radio</type>
-<tans>2</tans>
+<tans>mcq_interp</tans>
 <showvalidation>0</showvalidation>
 </input>
 <prt>
