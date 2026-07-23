@@ -18,21 +18,18 @@ this file holds the substance and meaning behind them, not the diffs.
 Question reserved as part of issue #2.
 ```
 
-## Entry 2 — reviewer · round 2 (2026-07-23T16:30:19)
-
-**Key facts to carry forward:**
-- No draft fields were present in this round's input; PRT/QTEST construction and review must wait until Author supplies the actual QUESTIONTEXT/QUESTIONVARIABLES/INPUT content described in the plan.
+## Entry 2 — author · attempt 1/3 (2026-07-23T16:31:50)
 
 **Reference files fetched:**
-- (none)
+- stack-docs/Authoring/Inputs/Multiple_choice_input.md
 
 ```text
-VERDICT: NEEDS REVISION
-SELF_FIXED:
-- (none)
-ESCALATED_TO_AUTHOR:
-- other The message contains no actual draft content to review — the "Draft to review:" section is empty, so there are no QUESTIONTEXT/QUESTIONVARIABLES/INPUT fields to check for syntax, math, or PRT/QTEST authorship. Author needs to actually produce the draft fields for this question (SE, hypotheses, t-score, P-value bucket, decision, validity-check parts) before any review or PRT/QTEST construction can proceed.
-NOTED_FOR_PLANNER:
-- (none)
+STACK API check: PASSED
+
+All checks passed.
+
+Deviations reported: - STRUCTURE (non-negotiable) plan item 2 asks for H0/H1 as "equation/expression input(s)" without specifying one vs two inputs; I split into two separate algebraic inputs (ans2 for H0, ans3 for H1) rather than one combined input, because a single input can't cleanly hold two separate equations for independent AlgEquiv grading and clear per-part feedback placement. This is a minimal implementation choice within a negotiable detail of a non-negotiable structural item.
+- Flagging for Reviewer (per the NOTE on equations vs expressions): Part 2's inputs expect equations (`mu=12`, `mu#12`); a student typing a bare expression instead should get diagnostic feedback rather than generic "incorrect" — this is a PRT-branch decision left to Reviewer, not something I implemented myself.
+- Flagging for Reviewer: Parts 3–5 need genuine follow-through PRT logic (recomputing the expected t-score from the student's own Part-1 SE, the expected bucket from the student's own Part-3 t, and the expected decision from the student's own Part-4 bucket) as specified in the plan's ANSWER TESTS section — this is real PRT authorship outside my scope, so I've only supplied ANSWERTEST choices and teacher answers based on the randomised teacher path.
 ```
 
