@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<question type="stack">
+<name>
+<text>One mean ci bears</text>
+</name>
+<questiontext format="html">
+<text><![CDATA[<p>A biologist is studying the weight of adult male black bears. A random sample of \(n={@n@}\) male bears has sample mean weight \(\bar{x}={@xbar@}\) kg and sample standard deviation \(s={@s@}\) kg. The biologist wants to construct a 95% confidence interval for the population mean weight \(\mu\) of all adult male black bears, using the critical value \(z^*=1.96\).</p>
+
+<p>Before doing any calculations, think about what population parameter \(\mu\) represents here, and picture the sampling distribution of \(\bar{x}\) that the confidence interval is based on. (This part is not graded.)</p>
+
+<p><b>Part 1.</b> Calculate the standard error of the mean, \(SE=\dfrac{s}{\sqrt{n}}\). Give your answer to 3 decimal places.</p>
+[[input:ans1]] [[validation:ans1]] [[feedback:prt_ans1]]
+
+<p><b>Part 2.</b> Calculate the margin of error, \(ME=z^*\times SE\), using your own value of \(SE\) from Part 1. Give your answer to 3 decimal places.</p>
+[[input:ans2]] [[validation:ans2]] [[feedback:prt_ans2]]
+
+<p><b>Part 3.</b> Using your own value of \(ME\) from Part 2, calculate the lower and upper bounds of the confidence interval, \(\bar{x}-ME\) and \(\bar{x}+ME\). Give each answer to 2 decimal places.</p>
+<p>Lower bound: [[input:ans3]] [[validation:ans3]] [[feedback:prt_ans3]]</p>
+<p>Upper bound: [[input:ans4]] [[validation:ans4]] [[feedback:prt_ans4]]</p>
+
+<p><b>Part 4.</b> Is it valid to use the large-sample \(z\)-confidence interval procedure here (i.e. is \(n\ge 25\))?</p>
+[[input:ans5]] [[validation:ans5]] [[feedback:prt_ans5]]
+
+<p><b>Part 5.</b> Which of the following is the correct interpretation of this confidence interval?</p>
+[[input:ans6]] [[validation:ans6]] [[feedback:prt_ans6]]]]></text>
+</questiontext>
+<questionvariables>
+<text><![CDATA[n: rand([10,15,18,22,30,45,80,150,250]);
+xbar: rand(51)+60;
+s: rand(31)+30;
+z: 1.96;
+se: s/sqrt(n);
+me: z*se;
+lower: xbar-me;
+upper: xbar+me;
+se_val: float(se);
+me_val: float(me);
+lower_val: float(lower);
+upper_val: float(upper);
+valid_p: is(n>=25);
+mcq_valid: [[true, valid_p, "Yes, the procedure is valid"], [false, not valid_p, "No, the procedure is not valid"]];
+mcq_interp: [
+  [1, false, "There is a 95% probability that the true population mean \\(\\mu\\) lies between the lower and upper bound computed from this particular sample."],
+  [2, true, "We are 95% confident that the interval from the lower to the upper bound contains the true population mean weight \\(\\mu\\) of all adult male black bears."],
+  [3, false, "95% of all adult male black bears have weights between the lower and upper bound."],
+  [4, false, "95% of all possible sample means \\(\\bar{x}\\) from repeated samples will fall between the lower and upper bound computed from this particular sample."]
+];]]></text>
+</questionvariables>
+<generalfeedback format="html">
+<text><![CDATA[<p>With \(n={@n@}\), \(\bar{x}={@xbar@}\), \(s={@s@}\):</p>
+<p>\(SE=\dfrac{s}{\sqrt{n}}={@s@}/\sqrt{@n@}={@se_val@}\)</p>
+<p>\(ME=z^*\times SE=1.96\times {@se_val@}={@me_val@}\)</p>
+<p>Confidence interval: \(\bar{x}\pm ME = ({@lower_val@},\,{@upper_val@})\)</p>
+[[if test="valid_p"]]
+<p>Since \(n={@n@}\ge 25\), the sample size is large enough for the Central Limit Theorem to justify treating the sampling distribution of \(\bar{x}\) as approximately normal, so the \(z\)-interval procedure is valid here.</p>
+[[else]]
+<p>Since \(n={@n@}<25\), the sample size is too small to rely on the Central Limit Theorem to justify the normal approximation used in this \(z\)-interval procedure, so strictly this method should not be used here.</p>
+[[/if]]
+<p>The correct interpretation is: we are 95% confident that the interval contains the true population mean \(\mu\) — the confidence level describes the long-run success rate of the method, not a probability statement about this one fixed interval, and it says nothing directly about individual bears or individual sample means.</p>]]></text>
+</generalfeedback>
+<questionnote format="moodle_auto_format">
+<text>\(n={@n@}, \bar{x}={@xbar@}, s={@s@}\), valid={@valid_p@}</text>
+</questionnote>
+<input>
+<name>ans1</name>
+<type>numerical</type>
+<tans>se</tans>
+<boxsize>10</boxsize>
+<forbidfloat>0</forbidfloat>
+</input>
+<input>
+<name>ans2</name>
+<type>numerical</type>
+<tans>me</tans>
+<boxsize>10</boxsize>
+<forbidfloat>0</forbidfloat>
+</input>
+<input>
+<name>ans3</name>
+<type>numerical</type>
+<tans>lower</tans>
+<boxsize>10</boxsize>
+<forbidfloat>0</forbidfloat>
+</input>
+<input>
+<name>ans4</name>
+<type>numerical</type>
+<tans>upper</tans>
+<boxsize>10</boxsize>
+<forbidfloat>0</forbidfloat>
+</input>
+<input>
+<name>ans5</name>
+<type>radio</type>
+<tans>true</tans>
+<showvalidation>0</showvalidation>
+</input>
+<input>
+<name>ans6</name>
+<type>radio</type>
+<tans>2</tans>
+<showvalidation>0</showvalidation>
+</input>
+<prt>
+  <name>prt_ans1</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans1-1-T</trueanswernote>
+    <falseanswernote>prt_ans1-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans2</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans2-1-T</trueanswernote>
+    <falseanswernote>prt_ans2-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans3</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans3-1-T</trueanswernote>
+    <falseanswernote>prt_ans3-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans4</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans4-1-T</trueanswernote>
+    <falseanswernote>prt_ans4-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans5</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans5-1-T</trueanswernote>
+    <falseanswernote>prt_ans5-1-F</falseanswernote>
+  </node>
+</prt>
+
+<prt>
+  <name>prt_ans6</name>
+  <node>
+    <name>0</name>
+    <answertest>AlgEquiv</answertest>
+    <sans>true</sans>
+    <tans>true</tans>
+    <trueanswernote>prt_ans6-1-T</trueanswernote>
+    <falseanswernote>prt_ans6-1-F</falseanswernote>
+  </node>
+</prt>
+<qtest>
+  <testcase>1</testcase>
+  <testinput>
+    <name>ans1</name>
+    <value>se</value>
+  </testinput>
+  <testinput>
+    <name>ans2</name>
+    <value>me</value>
+  </testinput>
+  <testinput>
+    <name>ans3</name>
+    <value>lower</value>
+  </testinput>
+  <testinput>
+    <name>ans4</name>
+    <value>upper</value>
+  </testinput>
+  <testinput>
+    <name>ans5</name>
+    <value>true</value>
+  </testinput>
+  <testinput>
+    <name>ans6</name>
+    <value>2</value>
+  </testinput>
+  <expected>
+    <name>prt_ans1</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans1-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans2</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans2-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans3</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans3-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans4</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans4-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans5</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans5-1-T</expectedanswernote>
+  </expected>
+  <expected>
+    <name>prt_ans6</name>
+    <expectedscore>1.0000000</expectedscore>
+    <expectedpenalty>0.0000000</expectedpenalty>
+    <expectedanswernote>prt_ans6-1-T</expectedanswernote>
+  </expected>
+</qtest>
+</question>
+</quiz>

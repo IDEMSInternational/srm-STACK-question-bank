@@ -109,3 +109,14 @@ FEEDBACK:
 PRT/QTEST SUGGESTIONS: Test both a clearly-valid (large n) and clearly-invalid (small n) variant for Part 4. Test the follow-through chain explicitly with a deliberately wrong SE (e.g. forgot the square root) and confirm Parts 2–3 still award credit when consistently derived from that wrong SE. Test Part 3 with a correct SE but a sign-flipped bound to confirm it's marked wrong independent of Part 1/2 correctness. Confirm Part 4 is graded strictly off actual n and is unaffected by any earlier arithmetic errors.
 ```
 
+## Entry 4 — author · attempt 1/3 (2026-07-23T20:17:41)
+
+**Reference files fetched:**
+- (none)
+
+```text
+STACK API check: FAILED
+
+Render failed: Error rendering input: The model answer field for this input is malformed: <code>true</code>. ,The teacher did not indicate at least one correct answer.
+```
+
