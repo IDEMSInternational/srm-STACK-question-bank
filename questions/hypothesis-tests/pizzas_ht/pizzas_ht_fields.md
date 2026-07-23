@@ -171,7 +171,6 @@ TANS: true
 TRUESCORE: 0
 TRUEFEEDBACK: <p>Your standard error is zero, so a \(t\)-score cannot be computed from it.</p>
 FALSENEXT: 1
-FALSEFEEDBACK: <p></p>
 NODE 1:
 SANS: is(abs(ans3-(xbar-12)/ans1)<=0.02)
 TANS: true

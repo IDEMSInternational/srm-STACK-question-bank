@@ -213,9 +213,6 @@ ta6: [[1, is(validity_true=1), "Yes"],
     </truefeedback>
     <falsenextnode>1</falsenextnode>
     <falseanswernote>prt_ans3-1-F</falseanswernote>
-    <falsefeedback format="html">
-      <text><![CDATA[<p></p>]]></text>
-    </falsefeedback>
   </node>
   <node>
     <name>1</name>
