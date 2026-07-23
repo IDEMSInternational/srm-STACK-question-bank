@@ -84,3 +84,27 @@ STACK API check: PASSED
 All checks passed.
 ```
 
+## Entry 5 — reviewer · round 1 (2026-07-23T18:33:06)
+
+**Key facts to carry forward:**
+- Every PRT node's SANS is a self-contained inline Maxima `block(...)`/`if` expression (no separate feedbackvariables section exists in the compact spec used here) — any future edit to a node's logic must edit that inline SANS expression directly, not look for a feedbackvariables block.
+- QTEST cases reference newly-added `test_wrong_*` question variables (defined right after `validity_opts`) purely to build wrong-but-consistent follow-through test inputs for Thread 1, Thread 2, and validity; they have no effect on the question itself, only on qtest expressions.
+- A qtest run fixes one random draw of `regime`/cell counts for all its cases; it's therefore not possible to force a specific regime (e.g. small-N) or a specific CI/test-decision boundary divergence deterministically through qtest inputs alone — the qtest cases here are written generically (in terms of the CAS-computed true values) so they pass correctly whichever regime is drawn, but do not guarantee any particular regime was actually exercised on a given run.
+- MCQ radio inputs ans1a/ans2a use fixed, unshuffled option lists (no `random_permutation`), so their correct qtest value is the literal constant `1` in both cases; the follow-through MCQs (ans1d, ans2d, ans3b) have a variant-dependent correct option number, so their qtest values must use `first(mcq_correct(...))` rather than a literal constant.
+
+**Reference files fetched:**
+- (none)
+
+```text
+VERDICT: NEEDS REVISION
+SELF_FIXED:
+- Replaced every placeholder `SANS: true / TANS: true` PRT node (12 PRTs, all deterministic placeholders per the task) with real grading logic: direct check for the two "definition" MCQs (ans1a, ans2a) and the expected-count input (ans3a); explicit follow-through recomputation (guarded against wrong-shape/non-numeric input, falling back to the true upstream value so a single slip doesn't crash the tree) for ans1b/1c/1d/1e and ans2b/2c/2d/2e and ans3b, matching the plan's non-negotiable follow-through structure. This is squarely PRT/QTEST authorship, always self-fixed regardless of size per my own scope.
+- Fixed the QTEST's MCQ input values: the draft supplied the *entire* teacher's-answer array (e.g. `ta_mcq1a`, `decision1_opts`) as the submitted value for a radio input, which is wrong per STACK's own testing convention (radio/dropdown test values must be the single selected value, via `first(mcq_correct(ta))` for variant-dependent correct options, or a literal constant for fixed ones) — an unfixed version would simply fail against the real API. Replaced the single QTEST case with several (happy path, wrong-MCQ-definition, Thread-1 wrong-but-consistent follow-through, Thread-2 wrong-but-consistent follow-through, and an empty-list adversarial case for ans1b), using correct MCQ value conventions throughout.
+- Appended small test-support variables to QUESTIONVARIABLES (`test_wrong_*`) purely to build qtest input expressions for the wrong-but-consistent-follow-through cases; these are new names, don't redefine or change the meaning of any existing variable, so this is a safe, contained addition.
+ESCALATED_TO_AUTHOR:
+- (none)
+NOTED_FOR_PLANNER:
+- The MCQ option text for ta_mcq1a/ta_mcq2a uses markdown-style `*italics*` inside a LaTeX/HTML string (e.g. "*non-adopters*") — this won't render as emphasis in the rendered HTML, just literal asterisks; consider `<em>...</em>` instead if the emphasis matters.
+- Per the plan's PRT/QTEST suggestions, a genuinely forced "CI-conclusion diverges from test-decision near a boundary" variant, and a genuinely forced small-N regime variant, cannot be deterministically produced through qtest input values alone — qtest fixes inputs, not the random draw of `regime`/cell counts within a single test run. My qtest cases are written generically (using the CAS formulas themselves, e.g. `min_expected_true`, `validity_opts`) so they pass correctly *whichever* regime the run happens to draw, which verifies the logic is right in general, but does not guarantee a specific regime was exercised on any given run. If Planner wants a specific regime or boundary case deterministically covered, a `<deployedseed>` pinned to a known-good variant would be needed — outside what a stateless qtest input list can express.
+```
+
