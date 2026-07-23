@@ -23,7 +23,8 @@ questions/<category>/<question_name>/
 
 - Every question must have ≥2 test cases (correct + at least one wrong answer)
 - Wrong-answer test inputs use offsets from the correct answer (e.g. `ta+1`), never independent random values
-- Committing is always a human decision — agents never commit directly
+- The normal authoring flow (Planner/Author/Reviewer) never commits without human approval — every question goes through a branch and PR, merged only once a user approves it in that session
+- The one exception: Concierge has full admin power over this repo (read/write/delete anything, branch/merge/push straight to `main`, no PR) — but only ever acts on a user's explicit, in-the-moment request for that exact action, never proactively
 
 ## Source content
 
